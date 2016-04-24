@@ -13,3 +13,4 @@ app.service('animationService', animationService);
 app.directive('animationMenu', animationMenuDirective);
 app.directive('mapReduce', mapReduceDirective);
 app.directive('animationControls', animationControlsDirective);
+app.directive('meanLabel', meanLabelDirective);

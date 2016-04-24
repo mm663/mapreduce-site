@@ -2,7 +2,7 @@
  * Created by matthewmicallef on 17/04/2016.
  */
 
-var meanController = function($scope, animationService) {
+var meanController = function($scope, $compile, animationService) {
     $scope.inputList = [];
     $scope.userInput = false;
     $scope.pageClass = 'page-mean';
@@ -15,15 +15,30 @@ var meanController = function($scope, animationService) {
         var i = document.getElementById('meanIntegerInput').value;
         $scope.inputList.push({key: k, values: i});
 
-        //2. Create span with bootstrapper label classes and append span to well.
+        //2. Call mean-label directive to create span.
         var well = document.getElementById('meanInputList');
-        var span = document.createElement('span');
-        span.className = 'label label-default';
-        span.innerHTML = "Key: '" + k + "' Integer: " + i;
-        well.appendChild(span);
+        var meanLabel = document.createElement('mean-label');
+        meanLabel.setAttribute("key", k);
+        meanLabel.setAttribute("integer", i);
+        $compile(well.appendChild(meanLabel))($scope);
 
         if(!$scope.userInput) {
             $scope.userInput = true;
+        }
+    };
+
+    $scope.hasSelectedElements = function() {
+        return document.getElementsByClassName('label-info').length > 0;
+    };
+
+    $scope.removeSelectedElements = function() {
+        var selectedElems = document.getElementsByClassName('label-info');
+        for(var i = 0; i < selectedElems.length; i++) {
+            var key = selectedElems[i].attributes.key.nodeValue;
+            var index = Utils.MapReduce.lookupArrayByKey($scope.inputList, key);
+            $scope.inputList.splice(index, 1);
+
+            $(selectedElems[i]).remove();
         }
     };
 };
