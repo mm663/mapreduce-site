@@ -312,7 +312,6 @@ var WordCount = {
                     var valuesTotal = WordCount.getPairValuesTotal(input[j]._pairData.values);
                     var pair = Utils.JSAV.createKeyValuePair(av, input[j]._pairData.key, valuesTotal);
                     pair.addIDContainer("Reducer", input[j].reducerId);
-                    pair.addIDContainer("Mapper", input[j].mapperId);
                     reduceJSAVPairs.push(pair);
                     pair.layout();
                     av.step();

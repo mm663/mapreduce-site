@@ -108,13 +108,14 @@ var Mean = {
             av.label("For every pair, a new key-value pair is created. " +
                      "The below list is the mapper output.");
 
+            arrCounter = 0;
             for(var j = 0; j < input.length; j++) {
                 if(input[j].mapperId === i + 1) {
                     if(arrCounter > 0) {
-                        jsavArr.unhighlight(j - 1);
+                        jsavArr.unhighlight(arrCounter - 1);
                     }
 
-                    jsavArr.highlight(j);
+                    jsavArr.highlight(arrCounter);
                     arrCounter++;
                     var key = input[j].key;
                     var values = input[j].values;
@@ -220,7 +221,6 @@ var Mean = {
             av.label("Key is hashed and the reducer identity obtained.");
             for(var j = 0; j < pairs.length; j++) {
                 if(pairs[j].mapperId === (i + 1)) {
-                    av.label("Key " + pairs[j]._pairData.key + " assigned to reducer : " + pairs[j].reducerId);
                     var pair = Utils.JSAV.createKeyValuePair(av, pairs[j]._pairData.key, pairs[j]._pairData.values);
                     pair.addIDContainer("Reducer", pairs[j].reducerId);
                     pair.addIDContainer("Mapper", pairs[j].mapperId);
@@ -274,7 +274,6 @@ var Mean = {
             pair.mapperId = sasArray[i].mapperId;
             pair.reducerId = sasArray[i].reducerId;
             pair.addIDContainer("Reducer", sasArray[i].reducerId);
-            pair.addIDContainer("Mapper", sasArray[i].mapperId);
             sasJSAVPairs.push(pair);
             pair.layout();
             av.step();
@@ -301,7 +300,6 @@ var Mean = {
                     var valuesAverage = Mean.getPairValuesAverage(input[j]._pairData.values);
                     var pair = Utils.JSAV.createKeyValuePair(av, input[j]._pairData.key, valuesAverage);
                     pair.addIDContainer("Reducer", input[j].reducerId);
-                    pair.addIDContainer("Mapper", input[j].mapperId);
                     reduceJSAVPairs.push(pair);
                     pair.layout();
 

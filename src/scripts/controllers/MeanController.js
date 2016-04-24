@@ -33,7 +33,7 @@ var meanController = function($scope, $compile, animationService) {
 
     $scope.removeSelectedElements = function() {
         var selectedElems = document.getElementsByClassName('label-info');
-        for(var i = 0; i < selectedElems.length; i++) {
+        for(var i = (selectedElems.length - 1); i >= 0; i--) {
             var key = selectedElems[i].attributes.key.nodeValue;
             var index = Utils.MapReduce.lookupArrayByKey($scope.inputList, key);
             $scope.inputList.splice(index, 1);
