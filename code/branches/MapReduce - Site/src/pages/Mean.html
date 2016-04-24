@@ -46,8 +46,14 @@
             </md-button>
 
             <p>Mean Input List:</p>
-            <div id="meanInputList" class="well">
-            </div>
+            <div id="meanInputList" class="well"></div>
+
+            <md-button id="removeFromListBtn"
+                       class="md-raised md-primary"
+                       ng-show="hasSelectedElements()"
+                       ng-click="removeSelectedElements()">
+                Remove
+            </md-button>
         </div>
 
         <animation-menu name="Mean"

@@ -31,18 +31,20 @@
   }
 
   .well {
-    margin: 0 auto 20px;
+    margin: 0 auto;
 
     .label-default {
       display: inline-block;
       margin: 2px;
       font-size: 0.9em;
       cursor: pointer;
+      outline: none;
     }
   }
 }
 
-#addToListBtn {
+#addToListBtn,
+#removeFromListBtn {
   background-color: cornflowerblue;
   margin-top: 15px;
 }
