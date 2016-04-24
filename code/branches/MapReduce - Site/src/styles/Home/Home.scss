@@ -1,0 +1,61 @@
+.page-home {
+  color: black;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+
+  section {
+    display: inline-block;
+  }
+
+  .btn {
+    position: relative;
+    display: block;
+    float: left;
+    padding: 55px 0 0 0;
+    margin: 12px;
+    color: white;
+    background-color: indianred;
+    box-sizing: border-box;
+    font-size: 20px;
+    width: 150px;
+    height: 150px;
+    -webkit-border-radius: 150px;
+    -moz-border-radius: 150px;
+    border-radius: 150px;
+    transition: all 500ms;
+    white-space: nowrap;
+  }
+
+  .btn:hover {
+    background-color: #A44949;
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    -o-transform: scale(1.1);
+    transform: scale(1.1);
+  }
+
+  &.ng-leave {
+    -webkit-transform-origin: 0% 0%;
+    -webkit-animation: rotateFall 1s both ease-in;
+    -moz-transform-origin: 0% 0%;
+    -moz-animation: rotateFall 1s both ease-in;
+    transform-origin: 0% 0%;
+    animation: rotateFall 1s both ease-in;
+  }
+
+  &.ng-enter {
+    -webkit-animation: scaleUp 0.5s both ease-in;
+    -moz-animation: scaleUp 0.5s both ease-in;
+    animation: scaleUp 0.5s both ease-in;
+  }
+}
+
+.home {
+  height: 100%;
+  background-color: #FFB266;
+  color:#a55400;
+}

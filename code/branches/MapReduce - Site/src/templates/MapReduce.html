@@ -1,0 +1,26 @@
+<div id="mapReduceAnimation">
+    <div id="map" class="mapReduceSection">
+        <h3 class="processTitle" ng-click="toggleMapReduceSection('mapperContainer')">Map</h3>
+        <div id="mapperContainer" class="animationContainer"></div>
+    </div>
+
+    <div id="combine" class="mapReduceSection" ng-show="showCombiners()">
+        <h3 class="processTitle" ng-click="toggleMapReduceSection('combinerContainer')">Combine</h3>
+        <div id="combinerContainer" class="animationContainer"></div>
+    </div>
+
+    <div id="partition" class="mapReduceSection" ng-show="showPartitioners()">
+        <h3 class="processTitle" ng-click="toggleMapReduceSection('partitionerContainer')">Partition</h3>
+        <div id="partitionerContainer" class="animationContainer"></div>
+    </div>
+
+    <div id="shuffleAndSort" class="mapReduceSection">
+        <h3 class="processTitle" ng-click="toggleMapReduceSection('sasContainer')">Shuffle and Sort</h3>
+        <div id="sasContainer" class="animationContainer"></div>
+    </div>
+
+    <div id="reduce" class="mapReduceSection">
+        <h3 class="processTitle" ng-click="toggleMapReduceSection('reducerContainer')">Reduce</h3>
+        <div id="reducerContainer" class="animationContainer"></div>
+    </div>
+</div>
