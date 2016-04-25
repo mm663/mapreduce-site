@@ -5,6 +5,9 @@
   left: 0;
   bottom: 0;
   right: 0; }
+  .page-home.ng-enter {
+    -webkit-animation: moveFromRight 1s ease both;
+    animation: moveFromRight 1s ease both; }
   .page-home section {
     display: inline-block; }
   .page-home .btn {
@@ -31,17 +34,6 @@
     -ms-transform: scale(1.1);
     -o-transform: scale(1.1);
     transform: scale(1.1); }
-  .page-home.ng-leave {
-    -webkit-transform-origin: 0% 0%;
-    -webkit-animation: rotateFall 1s both ease-in;
-    -moz-transform-origin: 0% 0%;
-    -moz-animation: rotateFall 1s both ease-in;
-    transform-origin: 0% 0%;
-    animation: rotateFall 1s both ease-in; }
-  .page-home.ng-enter {
-    -webkit-animation: scaleUp 0.5s both ease-in;
-    -moz-animation: scaleUp 0.5s both ease-in;
-    animation: scaleUp 0.5s both ease-in; }
 
 .home {
   height: 100%;
