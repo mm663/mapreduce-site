@@ -1,14 +1,7 @@
 .page-wordcount {
-  &.ng-leave {
-    -webkit-animation: slideOutLeft 0.5s both ease-in;
-    -moz-animation: slideOutLeft 0.5s both ease-in;
-    animation: slideOutLeft 0.5s both ease-in;
-  }
-
   &.ng-enter {
-    -webkit-animation: slideInRight 0.5s both ease-in;
-    -moz-animation: slideInRight 0.5s both ease-in;
-    animation: slideInRight 0.5s both ease-in;
+    -webkit-animation: moveFromTop 1s ease both;
+    animation: moveFromTop 1s ease both;
   }
 }
 

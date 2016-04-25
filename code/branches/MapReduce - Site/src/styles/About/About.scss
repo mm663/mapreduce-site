@@ -2,6 +2,11 @@
   height: 100%;
   padding: 0 10%;
 
+  &.ng-enter {
+    -webkit-animation: moveFromLeft 1s ease both;
+    animation: moveFromLeft 1s ease both;
+  }
+
   p.about {
     font-family: "Minion Pro";
     font-size: 1.5em;
