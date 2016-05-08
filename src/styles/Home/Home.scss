@@ -16,22 +16,20 @@
   }
 
   .btn {
-    position: relative;
     display: block;
     float: left;
-    padding: 55px 0 0 0;
+    padding: 60px 0 0 0;
     margin: 12px;
     color: white;
     background-color: indianred;
     box-sizing: border-box;
-    font-size: 20px;
+    font-size: 15px;
     width: 150px;
     height: 150px;
     -webkit-border-radius: 150px;
     -moz-border-radius: 150px;
     border-radius: 150px;
     transition: all 500ms;
-    white-space: nowrap;
   }
 
   .btn:hover {

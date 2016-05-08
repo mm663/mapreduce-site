@@ -5,7 +5,7 @@
                   x="50%"
                   y="65px"
                   class="text--line">
-                Word Count
+                Relative Frequencies
             </text>
         </symbol>
 
@@ -27,10 +27,10 @@
                           ng-model="userInput">
                 </textarea>
 
-            <p>Note: Providing a lot of words will result in a very large and long animation.</p>
+            <p>Note: The neighbors of a word are considered to be all words on the same line.</p>
         </div>
 
-        <animation-menu name="WordCount"
+        <animation-menu name="RelativeFrequencies"
                         input="userInput"
                         show-mapper-per-line="true">
         </animation-menu>

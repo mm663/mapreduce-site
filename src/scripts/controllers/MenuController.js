@@ -45,10 +45,22 @@ var menuController = function($scope, animationService, $timeout) {
 
                 $scope.showLoader = false;
                 animationService.toggleAnimationDisabled();
-            } else if ($scope.name === 'Mean') {
+            } else if ($scope.name === "Mean") {
                 Mean.setAnimationService(animationService);
 
                 Mean.runMeanMapReduce(
+                    document.getElementById("numberOfMappersInput").value,
+                    document.getElementById("numberOfReducersInput").value,
+                    $scope.mapperPerLine,
+                    $scope.userInput
+                );
+
+                $scope.showLoader = false;
+                animationService.toggleAnimationDisabled();
+            } else if ($scope.name === "RelativeFrequencies") {
+                RelativeFrequencies.setAnimationService(animationService);
+
+                RelativeFrequencies.runRelativeFrequenciesMapReduce(
                     document.getElementById("numberOfMappersInput").value,
                     document.getElementById("numberOfReducersInput").value,
                     $scope.mapperPerLine,

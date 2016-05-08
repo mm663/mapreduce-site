@@ -28,4 +28,10 @@ var appConfig = function($routeProvider) {
             templateUrl: 'pages/Mean.html',
             controller: meanController
         })
+
+        // route for the relative frequencies animation page
+        .when('/relativefrequencies', {
+            templateUrl: 'pages/RelativeFrequencies.html',
+            controller: relativeFrequenciesController
+        })
 };

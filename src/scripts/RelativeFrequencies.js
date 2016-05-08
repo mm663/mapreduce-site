@@ -1,5 +1,5 @@
 /**
- * Created by matthewmicallef on 21/02/2016.
+ * Created by matthewmicallef on 28/04/2016.
  */
 
 var animationService;
@@ -10,54 +10,53 @@ var sasJSAVPairs = [];
 var reduceJSAVPairs = [];
 var jsavInstances = [];
 
-var WordCount = {
+var RelativeFrequencies = {
     setAnimationService: function(service) {
         animationService = service;
     },
-    runWordCountMapReduce: function(
+    runRelativeFrequenciesMapReduce: function(
         mapperCount,
         reducerCount,
         mapperPerLine,
         userInput
     ) {
+        RelativeFrequencies.reset();
 
-        WordCount.reset();
-
-        console.log("Starting Word Count MapReduce");
+        console.log("Starting Relative Frequencies MapReduce");
 
         var mapperInput = "";
         if(mapperPerLine) {
-            mapperInput = WordCount.processInput(userInput, true, -1);
+            mapperInput = RelativeFrequencies.processInput(userInput, true, -1);
         } else {
-            mapperInput = WordCount.processInput(userInput, false, Number(mapperCount));
+            mapperInput = RelativeFrequencies.processInput(userInput, false, Number(mapperCount));
         }
 
         //Map
-        WordCount.map(mapperInput);
+        RelativeFrequencies.map(mapperInput);
         var sasInput = mapJSAVPairs;
 
         //Combine
         if(animationService.isUsingCombiners()) {
-            WordCount.combine(mapJSAVPairs);
+            RelativeFrequencies.combine(mapJSAVPairs);
             sasInput = combinerJSAVPairs;
         }
 
         //Partition
         if(animationService.isUsingCombiners()) {
-            WordCount.partition(combinerJSAVPairs, mapperInput.length, Number(reducerCount));
+            RelativeFrequencies.partition(combinerJSAVPairs, mapperInput.length, Number(reducerCount));
         } else {
-            WordCount.partition(mapJSAVPairs, mapperInput.length, Number(reducerCount));
+            RelativeFrequencies.partition(mapJSAVPairs, mapperInput.length, Number(reducerCount));
         }
 
         sasInput = partitionJSAVPairs;
 
         //Shuffle and Sort
-        WordCount.shuffleAndSort(sasInput);
+        RelativeFrequencies.shuffleAndSort(sasInput);
 
         //Reduce
-        WordCount.reduce(sasJSAVPairs, Number(reducerCount));
+        RelativeFrequencies.reduce(sasJSAVPairs, Number(reducerCount));
 
-        //Update animationService with all JSAV instances.
+        //Update animationService with all JSAV instances
         if(jsavInstances) {
             animationService.setJSAVInstances(jsavInstances);
         }
@@ -81,7 +80,7 @@ var WordCount = {
                     if(mapperInput[mapperId] === undefined) {
                         mapperInput[mapperId] = newLineSplit[i];
                     } else {
-                        mapperInput[mapperId] += " " + newLineSplit[i]
+                        mapperInput[mapperId] += " \n " + newLineSplit[i]
                     }
                 }
 
@@ -101,64 +100,106 @@ var WordCount = {
             av.label("This mapper runs on a single node.");
 
             //Step 1
-            av.label("Initial Mapper Input:");
-            var wordsInChunk = input[i].split(" ");
-            var initMapArray = av.ds.array(wordsInChunk);
+            av.label("Initial mapper Input:");
+            var wordsInChunk = Utils.MapReduce.trimAllEntries(input[i].split("\n"));
+            var wordsArr = [];
+            for(var a = 0; a < wordsInChunk.length; a++) {
+                var temp = wordsInChunk[a].split(" ");
+                for(var b = 0; b < temp.length; b++) {
+                    wordsArr.push(temp[b]);
+                }
+            }
+            var initMapArray = av.ds.array(wordsArr);
             initMapArray.layout();
             av.displayInit();
             av.step();
 
             //Step 2
-            av.label("For every word, a new key-value pair is created.");
-            av.label("The below list is the mapper output.");
+            av.label("For every word, two key-value pairs are created.");
+            av.label("One as (w, *) and the other with the proper co-occurrence pair as shown below:");
 
+            var highlightCounter = 0;
             for(var j = 0; j < wordsInChunk.length; j++) {
-                if(j > 0) {
-                    initMapArray.unhighlight(j - 1);
+                var currentLine = wordsInChunk[j];
+                var splitLine = currentLine.split(" ");
+
+                for(var k = 0; k < splitLine.length; k++) {
+                    if(highlightCounter > 0) {
+                        initMapArray.unhighlight(highlightCounter - 1);
+                    }
+
+                    initMapArray.highlight(highlightCounter);
+                    highlightCounter++;
+
+                    var neighbors = RelativeFrequencies.getNeighbors(currentLine, splitLine[k]);
+
+                    if(neighbors.length > 0) {
+                        for(var l = 0; l < neighbors.length; l++) {
+                            var pair1 = Utils.JSAV.createKeyValuePair(av, "(" + splitLine[k] + ", *)", 1);
+                            pair1.mapperId = (i + 1);
+                            pair1.addIDContainer("Mapper", pair1.mapperId);
+                            mapJSAVPairs.push(pair1);
+                            pair1.layout();
+
+                            var pair2 = Utils.JSAV.createKeyValuePair(av, "(" + splitLine[k] + ", " + neighbors[l] +  ")", 1);
+                            pair2.mapperId = (i + 1);
+                            pair2.addIDContainer("Mapper", pair2.mapperId);
+                            mapJSAVPairs.push(pair2);
+                            pair2.layout();
+
+                            av.step();
+                        }
+                    } else {
+                        av.label(splitLine[k] + " does not have any neighbors.");
+                        av.step();
+                    }
                 }
-
-                initMapArray.highlight(j);
-                var key = wordsInChunk[j].replace(/(\r\n|\n|\r)/gm,"");
-                var pair = Utils.JSAV.createKeyValuePair(av, key, 1);
-                pair.mapperId = (i + 1); //Identifying which pair belongs to which mapper.
-                pair.addIDContainer("Mapper", pair.mapperId);
-
-                mapJSAVPairs.push(pair);
-                pair.layout();
-
-                av.step();
             }
 
             jsavInstances.push(av);
             av.recorded();
         }
     },
+    getNeighbors: function(line, word) {
+        //Neighbors of a word are all words on the same line.
+        var neighbors = [];
+        var lineSplit = line.split(" ");
+        var wordInstanceCounter = 0;
+        for(var i = 0; i < lineSplit.length; i++) {
+            if(lineSplit[i] !== word) {
+                neighbors.push(lineSplit[i]);
+            } else {
+                if(wordInstanceCounter === 1) {
+                    neighbors.push(lineSplit[i]);
+                }
+
+                wordInstanceCounter++;
+            }
+        }
+
+        return neighbors;
+    },
     combine: function(input) {
+        //Pairs of the form (w, u) & (u, w) will be combined
         var mapperCount = jsavInstances.length;
 
         for(var i = 0; i < mapperCount; i++) {
             var combinerId = Utils.JSAV.createHtmlElement("Combiner", i + 1);
             var av = new JSAV(combinerId);
-            av.label("A combiner is created for every mapper to perform local aggregation.");
+
+            av.label("A combiner is created for every mapper. Swapped pairs will be combined.");
 
             //Step 1
-            av.label("This is done by performing word count within every mapper");
-
             var filteredInput = input.filter(function(mapJSAVPairs) {
                 return mapJSAVPairs.mapperId == (i + 1);
             });
 
             var processedKeys = [];
             var pairs = [];
-            for (var j = 0; j < filteredInput.length; j++) {
-                if((processedKeys.length > 0) && (processedKeys.indexOf(filteredInput[j]._pairData.key) > -1)) {
-                    for(var k = 0; k < pairs.length; k++) {
-                        if(pairs[k].key === filteredInput[j]._pairData.key) {
-                            var combinerValues = Number(pairs[k].values);
-                            combinerValues += 1;
-                            pairs[k].values = String(combinerValues);
-                        }
-                    }
+            for(var j = 0; j < filteredInput.length; j++) {
+                var index = RelativeFrequencies.arrayContainsPair(processedKeys, filteredInput[j]._pairData.key);
+                if((processedKeys.length > 0) && index > -1) {
+                    pairs[index].values = String(Number(pairs[index].values) + 1);
                 } else {
                     processedKeys.push(filteredInput[j]._pairData.key);
                     pairs.push({
@@ -185,8 +226,8 @@ var WordCount = {
     },
     partition: function(input, numberOfMappers, numberOfReducers) {
         /*
-        The number of partitions (not partitioners) is equal to the number of reducers.
-        Hash value of the key, module the number of reducers
+         The number of partitions (not partitioners) is equal to the number of reducers.
+         Hash value of the key, module the number of reducers
          */
 
         partitionJSAVPairs = input;
@@ -196,7 +237,7 @@ var WordCount = {
 
         for(var i = 0; i < partitionJSAVPairs.length; i++) {
             key = partitionJSAVPairs[i]._pairData.key;
-            hashedString = Utils.MapReduce.hashCode(key);
+            hashedString = Utils.MapReduce.hashCode(RelativeFrequencies.getPartOfKey(key, 1));
             reducerId = Math.abs(hashedString % numberOfReducers) + 1;
             partitionJSAVPairs[i].reducerId = reducerId;
         }
@@ -278,7 +319,8 @@ var WordCount = {
         jsavInstances.push(av);
         av.recorded();
     },
-    reduce: function(input, numberOfReducers){
+    reduce: function(input, numberOfReducers) {
+        //TODO: Continue from here. Check all reducer logic.
         var pairCount = input.length;
 
         for(var i = 0; i < numberOfReducers; i++) {
@@ -289,19 +331,55 @@ var WordCount = {
             av.label("Reducer receives data and counts the values to obtain a total word count.");
             av.step();
 
+            var marginal = 0;
             for(j = 0; j < pairCount; j++) {
                 if(input[j].reducerId === (i + 1)) {
-                    var valuesTotal = Utils.MapReduce.getPairValuesTotal(input[j]._pairData.values);
-                    var pair = Utils.JSAV.createKeyValuePair(av, input[j]._pairData.key, valuesTotal);
-                    pair.addIDContainer("Reducer", input[j].reducerId);
-                    reduceJSAVPairs.push(pair);
-                    pair.layout();
-                    av.step();
+                    var pairValuesTotal = Utils.MapReduce.getPairValuesTotal(input[j]._pairData.values);
+                    var x = RelativeFrequencies.getPartOfKey(input[j]._pairData.key, 2);
+                    if(x === "*") {
+                        marginal = pairValuesTotal;
+                    } else {
+                        var pair = Utils.JSAV.createKeyValuePair(av,
+                            input[j]._pairData.key,
+                            (pairValuesTotal + "/" +  marginal + " => " + (pairValuesTotal / marginal).toFixed(2))
+                        );
+                        pair.addIDContainer("Reducer", input[j].reducerId);
+                        pair.layout();
+                        av.step();
+                    }
                 }
             }
 
             jsavInstances.push(av);
             av.recorded();
+        }
+    },
+    arrayContainsPair: function(array, key) {
+        for (var i = 0; i < array.length; i++) {
+            if(RelativeFrequencies.getKeyEquality(array[i], key)) {
+                return i;
+            }
+        }
+
+        return -1;
+    },
+    getPartOfKey: function(key, part) {
+        var keySplit = key.split(',');
+        if(part === 1) {
+            return keySplit[0].split('(')[1].trim();
+        } else if (part === 2) {
+            return keySplit[1].split(')')[0].trim();
+        }
+    },
+    getKeyEquality: function(key1, key2) {
+        var word1 = RelativeFrequencies.getPartOfKey(key1, 1);
+        var word2 = RelativeFrequencies.getPartOfKey(key1, 2);
+
+        var keyPart1 = RelativeFrequencies.getPartOfKey(key2, 1);
+        var keyPart2 = RelativeFrequencies.getPartOfKey(key2, 2);
+
+        if(word1 === keyPart1 && word2 === keyPart2) {
+            return true;
         }
     },
     reset: function() {
