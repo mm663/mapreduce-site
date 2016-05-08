@@ -29,33 +29,31 @@ var Mean = {
         var mapperInput = Mean.processInput(userInput, Number(mapperCount));
 
         //Map
-        var mapJSAVPairs = Mean.map(mapperInput, Number(mapperCount));
+        Mean.map(mapperInput, Number(mapperCount));
         var sasInput = mapJSAVPairs;
 
         //Combine
-        var combinerJSAVPairs;
         if(animationService.isUsingCombiners()) {
-            combinerJSAVPairs = Mean.combine(mapJSAVPairs);
+            Mean.combine(mapJSAVPairs);
             sasInput = combinerJSAVPairs;
         }
 
         //Partition
-        var partitionJSAVPairs;
         if(animationService.isUsingCombiners()) {
-            partitionJSAVPairs = Mean.partition(combinerJSAVPairs, Number(mapperCount), Number(reducerCount));
+            Mean.partition(combinerJSAVPairs, Number(mapperCount), Number(reducerCount));
         } else {
-            partitionJSAVPairs = Mean.partition(mapJSAVPairs, Number(mapperCount), Number(reducerCount));
+            Mean.partition(mapJSAVPairs, Number(mapperCount), Number(reducerCount));
         }
 
         sasInput = partitionJSAVPairs;
 
         //Shuffle and Sort
-        var sasJSAVPairs = Mean.shuffleAndSort(sasInput);
+        Mean.shuffleAndSort(sasInput);
 
         //Reduce
-        var reduceJSAVPairs = Mean.reduce(sasJSAVPairs, Number(reducerCount));
+        Mean.reduce(sasJSAVPairs, Number(reducerCount));
 
-        //Update animationService with all JSAV Instances.
+        //Update animationService with all JSAV instances.
         if(jsavInstances) {
             animationService.setJSAVInstances(jsavInstances);
         }
@@ -132,8 +130,6 @@ var Mean = {
             jsavInstances.push(av);
             av.recorded();
         }
-
-        return mapJSAVPairs;
     },
     combine: function(input) {
         var mapperCount = jsavInstances.length;
@@ -184,8 +180,6 @@ var Mean = {
             jsavInstances.push(av);
             av.recorded();
         }
-
-        return combinerJSAVPairs;
     },
     partition: function(input, numberOfMappers, numberOfReducers) {
         /*
@@ -193,16 +187,16 @@ var Mean = {
          Hash value of the key, module the number of reducers
          */
 
-        var pairs = input;
+        partitionJSAVPairs = input;
         var key = "";
         var hashedString = "";
         var reducerId = -1;
 
-        for(var i = 0; i < pairs.length; i++) {
-            key = pairs[i]._pairData.key;
+        for(var i = 0; i < partitionJSAVPairs.length; i++) {
+            key = partitionJSAVPairs[i]._pairData.key;
             hashedString = Utils.MapReduce.hashCode(key);
             reducerId = Math.abs(hashedString % numberOfReducers) + 1;
-            pairs[i].reducerId = reducerId;
+            partitionJSAVPairs[i].reducerId = reducerId;
         }
 
         for(var i = 0; i < numberOfMappers; i++) {
@@ -219,11 +213,11 @@ var Mean = {
             av.step();
 
             av.label("Key is hashed and the reducer identity obtained.");
-            for(var j = 0; j < pairs.length; j++) {
-                if(pairs[j].mapperId === (i + 1)) {
-                    var pair = Utils.JSAV.createKeyValuePair(av, pairs[j]._pairData.key, pairs[j]._pairData.values);
-                    pair.addIDContainer("Reducer", pairs[j].reducerId);
-                    pair.addIDContainer("Mapper", pairs[j].mapperId);
+            for(var j = 0; j < partitionJSAVPairs.length; j++) {
+                if(partitionJSAVPairs[j].mapperId === (i + 1)) {
+                    var pair = Utils.JSAV.createKeyValuePair(av, partitionJSAVPairs[j]._pairData.key, partitionJSAVPairs[j]._pairData.values);
+                    pair.addIDContainer("Reducer", partitionJSAVPairs[j].reducerId);
+                    pair.addIDContainer("Mapper", partitionJSAVPairs[j].mapperId);
                     pair.layout();
                     av.step();
                 }
@@ -234,8 +228,6 @@ var Mean = {
                 av.recorded();
             }
         }
-
-        return pairs;
     },
     shuffleAndSort: function(input) {
         var sasArray = [];
@@ -281,8 +273,6 @@ var Mean = {
 
         jsavInstances.push(av);
         av.recorded();
-
-        return sasJSAVPairs;
     },
     reduce: function(input, numberOfReducers) {
         var pairCount = input.length;
@@ -297,8 +287,14 @@ var Mean = {
 
             for(j = 0; j < pairCount; j++) {
                 if(input[j].reducerId === (i + 1)) {
-                    var valuesAverage = Mean.getPairValuesAverage(input[j]._pairData.values);
-                    var pair = Utils.JSAV.createKeyValuePair(av, input[j]._pairData.key, valuesAverage);
+                    var result = Mean.getPairValuesAverage(input[j]._pairData.values);
+                    var valuesSum = result[0];
+                    var valuesCount = result[1];
+                    var valuesAverage = result[2];
+                    var pair = Utils.JSAV.createKeyValuePair(av,
+                        input[j]._pairData.key,
+                        valuesSum + "/" + valuesCount + " => " + valuesAverage
+                    );
                     pair.addIDContainer("Reducer", input[j].reducerId);
                     reduceJSAVPairs.push(pair);
                     pair.layout();
@@ -310,8 +306,6 @@ var Mean = {
             jsavInstances.push(av);
             av.recorded();
         }
-
-        return reduceJSAVPairs;
     },
     getSumFromPair: function(pair) {
         //Input: pair(2, 1)
@@ -336,7 +330,7 @@ var Mean = {
         }
 
         var average = (sum / count).toFixed(2);
-        return average;
+        return [sum, count, average];
     },
     reset: function() {
         mapJSAVPairs = [];

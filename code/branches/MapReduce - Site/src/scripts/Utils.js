@@ -76,6 +76,25 @@ var Utils = {
             }
             return -1; //Key not found
         },
+        trimAllEntries: function(arrayToTrim) {
+            for(var i = 0; i < arrayToTrim.length; i++) {
+                arrayToTrim[i] = arrayToTrim[i].trim();
+            }
+
+            return arrayToTrim;
+        },
+        getPairValuesTotal: function(values) {
+            if(typeof(values) === "number") {
+                return values;
+            } else if(typeof(values) === "string") {
+                var splitValues = values.split(",");
+                var valueCount = 0;
+                for(var i = 0; i < splitValues.length; i++) {
+                    valueCount += Number(splitValues[i]);
+                }
+                return valueCount;
+            }
+        },
         reset: function() {
             document.getElementById("mapperContainer").innerHTML = "";
             document.getElementById("combinerContainer").innerHTML = "";
