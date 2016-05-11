@@ -101,7 +101,7 @@ var WordCount = {
             av.label("This mapper runs on a single node.");
 
             //Step 1
-            av.label("Initial Mapper Input:");
+            av.label("Mapper Input:");
             var wordsInChunk = input[i].split(" ");
             var initMapArray = av.ds.array(wordsInChunk);
             initMapArray.layout();
@@ -110,14 +110,19 @@ var WordCount = {
 
             //Step 2
             av.label("For every word, a new key-value pair is created.");
-            av.label("The below list is the mapper output.");
 
+            var code = av.code(["for all term t in ", " Emit(term t, count 1)"]);
+
+            av.label("Mapper Output:");
             for(var j = 0; j < wordsInChunk.length; j++) {
                 if(j > 0) {
                     initMapArray.unhighlight(j - 1);
                 }
 
                 initMapArray.highlight(j);
+                code.setCurrentLine(1);
+                av.step();
+
                 var key = wordsInChunk[j].replace(/(\r\n|\n|\r)/gm,"");
                 var pair = Utils.JSAV.createKeyValuePair(av, key, 1);
                 pair.mapperId = (i + 1); //Identifying which pair belongs to which mapper.
@@ -126,6 +131,7 @@ var WordCount = {
                 mapJSAVPairs.push(pair);
                 pair.layout();
 
+                code.setCurrentLine(2);
                 av.step();
             }
 
@@ -217,7 +223,6 @@ var WordCount = {
             av.label("Key is hashed and the reducer identity obtained.");
             for(var j = 0; j < partitionJSAVPairs.length; j++) {
                 if(partitionJSAVPairs[j].mapperId === (i + 1)) {
-                    //av.label("Key " + partitionJSAVPairs[j]._pairData.key + " assigned to reducer : " + partitionJSAVPairs[j].reducerId);
                     var pair = Utils.JSAV.createKeyValuePair(av, partitionJSAVPairs[j]._pairData.key, partitionJSAVPairs[j]._pairData.values);
                     pair.addIDContainer("Reducer", partitionJSAVPairs[j].reducerId);
                     pair.addIDContainer("Mapper", partitionJSAVPairs[j].mapperId);
@@ -284,6 +289,7 @@ var WordCount = {
         for(var i = 0; i < numberOfReducers; i++) {
             var reducerId = Utils.JSAV.createHtmlElement("Reducer", (i + 1));
             var av = new JSAV(reducerId);
+            var code = av.code(["for all count c in counts [c1, c2, ...]", " sum = sum + c", "Emit(term t, count c)"]);
 
             //Step 1
             av.label("Reducer receives data and counts the values to obtain a total word count.");
@@ -291,11 +297,35 @@ var WordCount = {
 
             for(j = 0; j < pairCount; j++) {
                 if(input[j].reducerId === (i + 1)) {
+                    code.setCurrentLine(1);
+                    av.step();
+
+                    //Code highlighting
+                    var tempSplit = String(input[j]._pairData.values).split(",");
+                    var umsg = "Key: " + input[j]._pairData.key + " => Count: ";
+                    var first = true;
+                    for(var a = 0; a < tempSplit.length; a++) {
+                        if(first) {
+                            umsg += tempSplit[a];
+                            first = false;
+                        } else {
+                            umsg += " + " + tempSplit[a];
+                        }
+
+                        av.umsg(umsg);
+                        code.setCurrentLine(2);
+                        av.step();
+                    }
+
+                    //Actual Reducer Output
                     var valuesTotal = Utils.MapReduce.getPairValuesTotal(input[j]._pairData.values);
                     var pair = Utils.JSAV.createKeyValuePair(av, input[j]._pairData.key, valuesTotal);
                     pair.addIDContainer("Reducer", input[j].reducerId);
                     reduceJSAVPairs.push(pair);
                     pair.layout();
+
+                    code.setCurrentLine(3);
+
                     av.step();
                 }
             }
