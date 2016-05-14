@@ -94,24 +94,31 @@ var WordCount = {
         }
     },
     map: function(input) {
-        for(var i = 0; i < input.length; i++) {
-            var mapperId = Utils.JSAV.createHtmlElement("Mapper", i + 1);
-            var av = new JSAV(mapperId);
+        var mapperId,
+            av,
+            wordsInChunk,
+            initMapArray,
+            code;
 
-            av.label("This mapper runs on a single node.");
+        for(var i = 0; i < input.length; i++) {
+            mapperId = Utils.JSAV.createHtmlElement("Mapper", i + 1);
+            av = new JSAV(mapperId);
+            wordsInChunk = input[i].split(" ");
+            initMapArray = av.ds.array(wordsInChunk);
 
             //Step 1
+            av.label("This mapper runs on a single node.");
             av.label("Mapper Input:");
-            var wordsInChunk = input[i].split(" ");
-            var initMapArray = av.ds.array(wordsInChunk);
             initMapArray.layout();
             av.displayInit();
             av.step();
 
             //Step 2
             av.label("For every word, a new key-value pair is created.");
-
-            var code = av.code(["for all term t in ", " Emit(term t, count 1)"]);
+            code = av.code([
+                "for all term t in ",
+                " Emit(term t, count 1)"
+            ]);
 
             av.label("Mapper Output:");
             for(var j = 0; j < wordsInChunk.length; j++) {
@@ -140,29 +147,49 @@ var WordCount = {
         }
     },
     combine: function(input) {
-        var mapperCount = jsavInstances.length;
+        var mapperCount = jsavInstances.length,
+            combinerId,
+            av,
+            code,
+            processedKeys,
+            pairs,
+            filteredInput,
+            umsg;
 
         for(var i = 0; i < mapperCount; i++) {
-            var combinerId = Utils.JSAV.createHtmlElement("Combiner", i + 1);
-            var av = new JSAV(combinerId);
-            av.label("A combiner is created for every mapper to perform local aggregation.");
+            combinerId = Utils.JSAV.createHtmlElement("Combiner", i + 1);
+            av = new JSAV(combinerId);
+            processedKeys = [];
+            pairs = [];
 
-            //Step 1
-            av.label("This is done by performing word count within every mapper");
-
-            var filteredInput = input.filter(function(mapJSAVPairs) {
+            filteredInput = input.filter(function(mapJSAVPairs) {
                 return mapJSAVPairs.mapperId == (i + 1);
             });
 
-            var processedKeys = [];
-            var pairs = [];
+            code = av.code([
+                "for all count c in counts [c1, c2, ...]",
+                " sum = sum + c",
+                "Emit(term t, count sum)"
+            ]);
+
+            //Step 1
+            av.label("A combiner performs local aggregation.");
+            code.setCurrentLine(1);
+            av.step();
+
             for (var j = 0; j < filteredInput.length; j++) {
+                umsg = "Key = " + filteredInput[j]._pairData.key + "<br> Sum = 1";
+
                 if((processedKeys.length > 0) && (processedKeys.indexOf(filteredInput[j]._pairData.key) > -1)) {
                     for(var k = 0; k < pairs.length; k++) {
                         if(pairs[k].key === filteredInput[j]._pairData.key) {
                             var combinerValues = Number(pairs[k].values);
                             combinerValues += 1;
                             pairs[k].values = String(combinerValues);
+
+                            //Updating umsg to track data changes.
+                            av.umsg(umsg + " + 1");
+                            av.step();
                         }
                     }
                 } else {
@@ -172,6 +199,11 @@ var WordCount = {
                         values: filteredInput[j]._pairData.values,
                         mapperId: (i + 1)
                     });
+
+                    //Updating umsg and currently highlighted code.
+                    av.umsg(umsg);
+                    code.setCurrentLine(2);
+                    av.step();
                 }
             }
 
@@ -182,6 +214,9 @@ var WordCount = {
                 pair.addIDContainer("Mapper", (i + 1));
                 combinerJSAVPairs.push(pair);
                 pair.layout();
+
+                //Updating highlighted code.
+                code.setCurrentLine(3);
                 av.step();
             }
 
@@ -196,9 +231,9 @@ var WordCount = {
          */
 
         partitionJSAVPairs = input;
-        var key = "";
-        var hashedString = "";
-        var reducerId = -1;
+        var key = "",
+            hashedString = "",
+            reducerId = -1;
 
         for(var i = 0; i < partitionJSAVPairs.length; i++) {
             key = partitionJSAVPairs[i]._pairData.key;
@@ -207,9 +242,12 @@ var WordCount = {
             partitionJSAVPairs[i].reducerId = reducerId;
         }
 
+        var partitionerId,
+            av;
+
         for(var i = 0; i < numberOfMappers; i++) {
-            var partitionerId = Utils.JSAV.createHtmlElement("Partitioner", i + 1);
-            var av = new JSAV(partitionerId);
+            partitionerId = Utils.JSAV.createHtmlElement("Partitioner", i + 1);
+            av = new JSAV(partitionerId);
 
             //Step 1
             if(!animationService.isUsingCombiners()) {
@@ -238,12 +276,15 @@ var WordCount = {
         }
     },
     shuffleAndSort: function(input) {
-        var sasArray = [];
+        var sasArray = [],
+            key,
+            values,
+            keyPos;
 
         for(var i = 0; i < input.length; i++) {
-            var key = input[i]._pairData.key;
-            var values = input[i]._pairData.values;
-            var keyPos = Utils.MapReduce.lookupArrayByKey(sasArray, key);
+            key = input[i]._pairData.key;
+            values = input[i]._pairData.values;
+            keyPos = Utils.MapReduce.lookupArrayByKey(sasArray, key);
 
             if(keyPos > -1) {
                 sasArray[keyPos].values += ", " + values;
@@ -284,12 +325,24 @@ var WordCount = {
         av.recorded();
     },
     reduce: function(input, numberOfReducers){
-        var pairCount = input.length;
+        var pairCount = input.length,
+            reducerId,
+            av,
+            code,
+            tempSplit,
+            umsg,
+            first,
+            valuesTotal,
+            pair;
 
         for(var i = 0; i < numberOfReducers; i++) {
-            var reducerId = Utils.JSAV.createHtmlElement("Reducer", (i + 1));
-            var av = new JSAV(reducerId);
-            var code = av.code(["for all count c in counts [c1, c2, ...]", " sum = sum + c", "Emit(term t, count c)"]);
+            reducerId = Utils.JSAV.createHtmlElement("Reducer", (i + 1));
+            av = new JSAV(reducerId);
+            code = av.code([
+                "for all count c in counts [c1, c2, ...]",
+                " sum = sum + c",
+                "Emit(term t, count sum)"
+            ]);
 
             //Step 1
             av.label("Reducer receives data and counts the values to obtain a total word count.");
@@ -297,13 +350,14 @@ var WordCount = {
 
             for(j = 0; j < pairCount; j++) {
                 if(input[j].reducerId === (i + 1)) {
+                    //Code highlighting
                     code.setCurrentLine(1);
                     av.step();
 
-                    //Code highlighting
-                    var tempSplit = String(input[j]._pairData.values).split(",");
-                    var umsg = "Key: " + input[j]._pairData.key + " => Count: ";
-                    var first = true;
+                    tempSplit = String(input[j]._pairData.values).split(",");
+                    umsg = "Key = " + input[j]._pairData.key + "<br> Sum = ";
+                    first = true;
+
                     for(var a = 0; a < tempSplit.length; a++) {
                         if(first) {
                             umsg += tempSplit[a];
@@ -312,20 +366,21 @@ var WordCount = {
                             umsg += " + " + tempSplit[a];
                         }
 
+                        //Updating umsg and currently highlighted code
                         av.umsg(umsg);
                         code.setCurrentLine(2);
                         av.step();
                     }
 
                     //Actual Reducer Output
-                    var valuesTotal = Utils.MapReduce.getPairValuesTotal(input[j]._pairData.values);
-                    var pair = Utils.JSAV.createKeyValuePair(av, input[j]._pairData.key, valuesTotal);
+                    valuesTotal = Utils.MapReduce.getPairValuesTotal(input[j]._pairData.values);
+                    pair = Utils.JSAV.createKeyValuePair(av, input[j]._pairData.key, valuesTotal);
                     pair.addIDContainer("Reducer", input[j].reducerId);
                     reduceJSAVPairs.push(pair);
                     pair.layout();
 
+                    //Updating highlighted code
                     code.setCurrentLine(3);
-
                     av.step();
                 }
             }

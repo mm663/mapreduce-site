@@ -258,7 +258,6 @@ var RelativeFrequencies = {
             av.label("Key is hashed and the reducer identity obtained.");
             for(var j = 0; j < partitionJSAVPairs.length; j++) {
                 if(partitionJSAVPairs[j].mapperId === (i + 1)) {
-                    //av.label("Key " + partitionJSAVPairs[j]._pairData.key + " assigned to reducer : " + partitionJSAVPairs[j].reducerId);
                     var pair = Utils.JSAV.createKeyValuePair(av, partitionJSAVPairs[j]._pairData.key, partitionJSAVPairs[j]._pairData.values);
                     pair.addIDContainer("Reducer", partitionJSAVPairs[j].reducerId);
                     pair.addIDContainer("Mapper", partitionJSAVPairs[j].mapperId);
@@ -320,7 +319,6 @@ var RelativeFrequencies = {
         av.recorded();
     },
     reduce: function(input, numberOfReducers) {
-        //TODO: Continue from here. Check all reducer logic.
         var pairCount = input.length;
 
         for(var i = 0; i < numberOfReducers; i++) {
@@ -336,17 +334,26 @@ var RelativeFrequencies = {
                 if(input[j].reducerId === (i + 1)) {
                     var pairValuesTotal = Utils.MapReduce.getPairValuesTotal(input[j]._pairData.values);
                     var x = RelativeFrequencies.getPartOfKey(input[j]._pairData.key, 2);
+                    var pair;
                     if(x === "*") {
                         marginal = pairValuesTotal;
+
+                        pair = Utils.JSAV.createKeyValuePair(
+                            av,
+                            input[j]._pairData.key,
+                            ("Marginal: " + marginal)
+                        );
                     } else {
-                        var pair = Utils.JSAV.createKeyValuePair(av,
+                        pair = Utils.JSAV.createKeyValuePair(
+                            av,
                             input[j]._pairData.key,
                             (pairValuesTotal + "/" +  marginal + " => " + (pairValuesTotal / marginal).toFixed(2))
                         );
-                        pair.addIDContainer("Reducer", input[j].reducerId);
-                        pair.layout();
-                        av.step();
                     }
+
+                    pair.addIDContainer("Reducer", input[j].reducerId);
+                    pair.layout();
+                    av.step();
                 }
             }
 

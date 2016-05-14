@@ -59,9 +59,9 @@ var Mean = {
         }
     },
     processInput: function(input, mapperCount) {
-        var mapperShare = Math.floor(input.length / mapperCount);
-        var mapperId = 0;
-        var mapperInput = input;
+        var mapperShare = Math.floor(input.length / mapperCount),
+            mapperId = 0,
+            mapperInput = input;
 
         for (var i = 0; i < input.length; i++) {
             if((i % mapperShare) === 0) {
@@ -78,34 +78,44 @@ var Mean = {
         return mapperInput;
     },
     map: function(input, mapperCount) {
-        var arrCounter = 0;
+        var arrCounter = 0,
+            mapperId,
+            av,
+            arr,
+            arrCounter,
+            jsavArr,
+            code;
 
         for(var i = 0; i < mapperCount; i++) {
-            var mapperId = Utils.JSAV.createHtmlElement("Mapper", i + 1);
-            var av = new JSAV(mapperId);
-
-            av.label("This mapper runs on a single node.");
+            mapperId = Utils.JSAV.createHtmlElement("Mapper", i + 1);
+            av = new JSAV(mapperId);
 
             //Step 1
+            av.label("This mapper runs on a single node.");
             av.label("Mapper Input:");
 
-            var arr = [];
-            var arrCounter = 0;
+            arr = [];
+            arrCounter = 0;
+
             for (var j = 0; j < input.length; j++) {
                 if(input[j].mapperId === i + 1) {
                     arr[arrCounter] = "K: " + input[j].key + " V: " + input[j].values;
                     arrCounter++;
                 }
             }
-            var jsavArr = av.ds.array(arr);
+
+            jsavArr = av.ds.array(arr);
             jsavArr.layout();
             av.displayInit();
             av.step();
 
             //Step 2
-            av.label("For every pair, a new key-value pair is created. " +
-                     "The below list is the mapper output.");
+            av.label("For every pair, a new key-value pair is created.");
+            code = av.code([
+                "Emit(term t, pair(r, 1)"
+            ]);
 
+            av.label("Mapper Output:");
             arrCounter = 0;
             for(var j = 0; j < input.length; j++) {
                 if(input[j].mapperId === i + 1) {
@@ -123,6 +133,8 @@ var Mean = {
                     mapJSAVPairs.push(pair);
                     pair.layout();
 
+                    //Code highlighting
+                    code.setCurrentLine(1);
                     av.step();
                 }
             }
@@ -132,26 +144,62 @@ var Mean = {
         }
     },
     combine: function(input) {
-        var mapperCount = jsavInstances.length;
+        var mapperCount = jsavInstances.length,
+            combinerId,
+            av,
+            processedKeys,
+            pairs,
+            filteredInput,
+            code;
 
         for(var i = 0; i < mapperCount; i++) {
-            var combinerId = Utils.JSAV.createHtmlElement("Combiner", i + 1);
-            var av = new JSAV(combinerId);
-            av.label("A combiner is created for every mapper to perform local aggregation.");
+            combinerId = Utils.JSAV.createHtmlElement("Combiner", i + 1);
+            av = new JSAV(combinerId);
+            processedKeys = [];
+            pairs = [];
 
             //Step 1
-            var filteredInput = input.filter(function(mapJSAVPairs) {
+            filteredInput = input.filter(function(mapJSAVPairs) {
                 return mapJSAVPairs.mapperId == (i + 1);
             });
 
-            var processedKeys = [];
-            var pairs = [];
+            code = av.code ([
+                "for all pair (s,c) in pairs [(s1,c1), (s2,c2), ...] do",
+                " sum = sum + s",
+                " count = count + c",
+                "for all pair (s,c) in combined pairs [(s1,c1), ...] do",
+                " Emit (string t, pair (s, c))"
+            ]);
+
+            av.label("A combiner performs local aggregation.");
+
             for (var j = 0; j < filteredInput.length; j++) {
+                code.setCurrentLine(1);
+                av.step();
+
+                umsg = "Key = " + filteredInput[j]._pairData.key +
+                       "<br> Sum = ";
+                var tempUmsg = "<br> Count = ";
+                var tempSum;
+                var tempCount;
+
                 if((processedKeys.length > 0) && (processedKeys.indexOf(filteredInput[j]._pairData.key) > -1)) {
                     for(var k = 0; k < pairs.length; k++) {
                         if(pairs[k].key === filteredInput[j]._pairData.key) {
                             var pairSum = Number(Mean.getSumFromPair(pairs[k].values));
                             var pairCount = Number(Mean.getCountFromPair(pairs[k].values));
+
+                            //Updating umsg and currently highlighted code.
+                            tempSum += " + " + String(pairSum);
+                            av.umsg(umsg + tempSum);
+                            code.setCurrentLine(2);
+                            av.step();
+
+                            tempCount += " + " + String(pairCount);
+                            av.umsg(umsg + tempSum + tempUmsg + tempCount);
+                            code.setCurrentLine(3);
+                            av.step();
+
                             pairSum += Number(Mean.getSumFromPair(filteredInput[j]._pairData.values));
                             pairCount += Number(Mean.getCountFromPair(filteredInput[j]._pairData.values));
                             pairs[k].values = "pair(" + pairSum + ", " + pairCount + ")";
@@ -164,16 +212,33 @@ var Mean = {
                         values: filteredInput[j]._pairData.values,
                         mapperId: (i + 1)
                     });
+
+                    //Updating umsg and currently highlighted code.
+                    tempSum = Mean.getSumFromPair(filteredInput[j]._pairData.values);
+                    av.umsg(umsg + tempSum);
+                    code.setCurrentLine(2);
+                    av.step();
+
+                    tempCount = Mean.getCountFromPair(filteredInput[j]._pairData.values);
+                    av.umsg(umsg + tempSum + tempUmsg + tempCount);
+                    code.setCurrentLine(3);
+                    av.step();
                 }
             }
 
             for (var j = 0; j < pairs.length; j++) {
+                code.setCurrentLine(4);
+                av.step();
+
                 var pair = Utils.JSAV.createKeyValuePair(av, pairs[j].key, pairs[j].values);
                 pair.mapperId = pairs[j].mapperId;
                 pair.combinerId = (i + 1);
                 pair.addIDContainer("Mapper", pair.mapperId);
                 combinerJSAVPairs.push(pair);
                 pair.layout();
+
+                //Updating highlighted code.
+                code.setCurrentLine(5);
                 av.step();
             }
 
@@ -188,9 +253,11 @@ var Mean = {
          */
 
         partitionJSAVPairs = input;
-        var key = "";
-        var hashedString = "";
-        var reducerId = -1;
+        var key = "",
+            hashedString = "",
+            reducerId = -1,
+            partitionerId,
+            av;
 
         for(var i = 0; i < partitionJSAVPairs.length; i++) {
             key = partitionJSAVPairs[i]._pairData.key;
@@ -200,8 +267,8 @@ var Mean = {
         }
 
         for(var i = 0; i < numberOfMappers; i++) {
-            var partitionerId = Utils.JSAV.createHtmlElement("Partitioner", i + 1);
-            var av = new JSAV(partitionerId);
+            partitionerId = Utils.JSAV.createHtmlElement("Partitioner", i + 1);
+            av = new JSAV(partitionerId);
 
             //Step 1
             if(!animationService.isUsingCombiners()) {
@@ -230,12 +297,15 @@ var Mean = {
         }
     },
     shuffleAndSort: function(input) {
-        var sasArray = [];
+        var sasArray = [],
+            key,
+            values,
+            keyPos;
 
         for(var i = 0; i < input.length; i++) {
-            var key = input[i]._pairData.key;
-            var values = input[i]._pairData.values;
-            var keyPos = Utils.MapReduce.lookupArrayByKey(sasArray, key);
+            key = input[i]._pairData.key;
+            values = input[i]._pairData.values;
+            keyPos = Utils.MapReduce.lookupArrayByKey(sasArray, key);
 
             if(keyPos > -1) {
                 sasArray[keyPos].values += ", " + values;
@@ -275,23 +345,63 @@ var Mean = {
         av.recorded();
     },
     reduce: function(input, numberOfReducers) {
-        var pairCount = input.length;
+        var pairCount = input.length,
+            reducerId,
+            av,
+            result,
+            valuesSum,
+            valuesCount,
+            valuesAverage,
+            pair,
+            code,
+            umsg;
 
         for(var i = 0; i < numberOfReducers; i++) {
-            var reducerId = Utils.JSAV.createHtmlElement("Reducer", (i + 1));
-            var av = new JSAV(reducerId);
+            reducerId = Utils.JSAV.createHtmlElement("Reducer", (i + 1));
+            av = new JSAV(reducerId);
+            code = av.code ([
+                "for all pair (s,c) in pairs [(s1,c1), (s2,c2), ...] do",
+                " sum = sum + s",
+                " count = count + c",
+                "avg = sum / count",
+                " Emit (string t, pair (s, c))"
+            ]);
 
             //Step 1
-            av.label("Reducer receives data and counts the values to obtain a total word count.");
+            av.label("Reducer receives data and combines pairs to calculate average.");
             av.step();
 
             for(j = 0; j < pairCount; j++) {
                 if(input[j].reducerId === (i + 1)) {
-                    var result = Mean.getPairValuesAverage(input[j]._pairData.values);
-                    var valuesSum = result[0];
-                    var valuesCount = result[1];
-                    var valuesAverage = result[2];
-                    var pair = Utils.JSAV.createKeyValuePair(av,
+                    //Code highlighting
+                    umsg = "Key = " + input[j]._pairData.key;
+                    av.umsg(umsg);
+                    code.setCurrentLine(1);
+                    av.step();
+
+                    result = Mean.getPairValuesAverage(input[j]._pairData.values);
+                    valuesSum = result[0];
+                    valuesCount = result[1];
+                    valuesAverage = result[2];
+
+                    //Code highlighting
+                    umsg += "<br> Sum = " + valuesSum;
+                    av.umsg(umsg);
+                    code.setCurrentLine(2);
+                    av.step();
+
+                    umsg += " Count = " + valuesCount;
+                    av.umsg(umsg);
+                    code.setCurrentLine(3);
+                    av.step();
+
+                    umsg += "<br> Average = " + valuesSum + " / " + valuesCount;
+                    av.umsg(umsg);
+                    code.setCurrentLine(4);
+                    av.step();
+
+                    pair = Utils.JSAV.createKeyValuePair(
+                        av,
                         input[j]._pairData.key,
                         valuesSum + "/" + valuesCount + " => " + valuesAverage
                     );
@@ -299,6 +409,8 @@ var Mean = {
                     reduceJSAVPairs.push(pair);
                     pair.layout();
 
+                    //Updating umsg and currently highlighted code
+                    code.setCurrentLine(5);
                     av.step();
                 }
             }
