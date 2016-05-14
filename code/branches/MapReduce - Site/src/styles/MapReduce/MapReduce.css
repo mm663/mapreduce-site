@@ -81,6 +81,7 @@
           background-color: lightcoral; }
         .mapReduceSection .animationContainer .jsavcontainer .jsavcanvas .idContainer.MapperId,
         .mapReduceSection .animationContainer .jsavcontainer .jsavcanvas .idContainer.ReducerId {
+          min-width: 72px;
           border: 2px solid white;
           background-color: silver; }
 
