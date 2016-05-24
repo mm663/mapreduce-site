@@ -63,6 +63,7 @@ var RelativeFrequencies = {
     },
     processInput: function(input, mapperPerLine, mapperCount) {
         var newLineSplit = Utils.MapReduce.trimAllEntries(input.split("\n"));
+
         if(mapperPerLine) {
             return newLineSplit;
         } else {
@@ -93,60 +94,104 @@ var RelativeFrequencies = {
         }
     },
     map: function(input) {
+        var mapperId,
+            av,
+            wordsInChunk,
+            wordsArr,
+            temp,
+            initMapArray,
+            highlightCounter,
+            currentLine,
+            splitLine,
+            neighbors,
+            pair1,
+            pair2,
+            code,
+            umsg;
+
         for(var i = 0; i < input.length; i++) {
-            var mapperId = Utils.JSAV.createHtmlElement("Mapper", i + 1);
-            var av = new JSAV(mapperId);
+            mapperId = Utils.JSAV.createHtmlElement("Mapper", i + 1);
+            av = new JSAV(mapperId);
 
             av.label("This mapper runs on a single node.");
 
             //Step 1
             av.label("Initial mapper Input:");
-            var wordsInChunk = Utils.MapReduce.trimAllEntries(input[i].split("\n"));
-            var wordsArr = [];
+
+            wordsInChunk = Utils.MapReduce.trimAllEntries(input[i].split("\n"));
+            wordsArr = [];
+
             for(var a = 0; a < wordsInChunk.length; a++) {
-                var temp = wordsInChunk[a].split(" ");
+                temp = wordsInChunk[a].split(" ");
                 for(var b = 0; b < temp.length; b++) {
                     wordsArr.push(temp[b]);
                 }
             }
-            var initMapArray = av.ds.array(wordsArr);
+
+            initMapArray = av.ds.array(wordsArr);
             initMapArray.layout();
             av.displayInit();
             av.step();
 
             //Step 2
             av.label("For every word, two key-value pairs are created.");
-            av.label("One as (w, *) and the other with the proper co-occurrence pair as shown below:");
+            av.label("One as (word, *) and the other for co-occurrence:");
 
-            var highlightCounter = 0;
+            code = av.code ([
+                "for all line l in input",
+                "for all term t in line",
+                " for all term u in neighbors(t)",
+                "  Emit((term t, *), 1)",
+                "  Emit(term t, u), 1)"
+            ]);
+
+            highlightCounter = 0;
             for(var j = 0; j < wordsInChunk.length; j++) {
-                var currentLine = wordsInChunk[j];
-                var splitLine = currentLine.split(" ");
+                currentLine = wordsInChunk[j];
+                splitLine = currentLine.split(" ");
+
+                //Code highlighting
+                umsg = "line = " + currentLine;
+                av.umsg(umsg);
+                code.setCurrentLine(1);
+                av.step();
 
                 for(var k = 0; k < splitLine.length; k++) {
+                    neighbors = RelativeFrequencies.getNeighbors(currentLine, splitLine[k]);
+
                     if(highlightCounter > 0) {
                         initMapArray.unhighlight(highlightCounter - 1);
                     }
 
+                    //Code highlighting
+                    code.setCurrentLine(2);
                     initMapArray.highlight(highlightCounter);
                     highlightCounter++;
+                    av.step();
 
-                    var neighbors = RelativeFrequencies.getNeighbors(currentLine, splitLine[k]);
+                    umsg += "<br> key = " + splitLine[k] + ", neighbors = [" + neighbors + "]";
+                    av.umsg(umsg);
+                    code.setCurrentLine(3);
+                    av.step();
 
                     if(neighbors.length > 0) {
                         for(var l = 0; l < neighbors.length; l++) {
-                            var pair1 = Utils.JSAV.createKeyValuePair(av, "(" + splitLine[k] + ", *)", 1);
+                            pair1 = Utils.JSAV.createKeyValuePair(av, "(" + splitLine[k] + ", *)", 1);
                             pair1.mapperId = (i + 1);
                             pair1.addIDContainer("Mapper", pair1.mapperId);
                             mapJSAVPairs.push(pair1);
                             pair1.layout();
 
-                            var pair2 = Utils.JSAV.createKeyValuePair(av, "(" + splitLine[k] + ", " + neighbors[l] +  ")", 1);
+                            code.setCurrentLine(4);
+                            av.step();
+
+                            pair2 = Utils.JSAV.createKeyValuePair(av, "(" + splitLine[k] + ", " + neighbors[l] +  ")", 1);
                             pair2.mapperId = (i + 1);
                             pair2.addIDContainer("Mapper", pair2.mapperId);
                             mapJSAVPairs.push(pair2);
                             pair2.layout();
 
+                            code.setCurrentLine(5);
                             av.step();
                         }
                     } else {
@@ -181,23 +226,29 @@ var RelativeFrequencies = {
     },
     combine: function(input) {
         //Pairs of the form (w, u) & (u, w) will be combined
-        var mapperCount = jsavInstances.length;
+        var mapperCount = jsavInstances.length,
+            combinerId,
+            av,
+            filteredInput,
+            processedKeys,
+            pairs,
+            index,
+            pair;
 
         for(var i = 0; i < mapperCount; i++) {
-            var combinerId = Utils.JSAV.createHtmlElement("Combiner", i + 1);
-            var av = new JSAV(combinerId);
+            combinerId = Utils.JSAV.createHtmlElement("Combiner", i + 1);
+            av = new JSAV(combinerId);
+            processedKeys = [];
+            pairs = [];
 
-            av.label("A combiner is created for every mapper. Swapped pairs will be combined.");
-
-            //Step 1
-            var filteredInput = input.filter(function(mapJSAVPairs) {
+            filteredInput = input.filter(function(mapJSAVPairs) {
                 return mapJSAVPairs.mapperId == (i + 1);
             });
 
-            var processedKeys = [];
-            var pairs = [];
+            //Step 1
+            av.label("A combiner performs local aggregation.");
             for(var j = 0; j < filteredInput.length; j++) {
-                var index = RelativeFrequencies.arrayContainsPair(processedKeys, filteredInput[j]._pairData.key);
+                index = RelativeFrequencies.arrayContainsPair(processedKeys, filteredInput[j]._pairData.key);
                 if((processedKeys.length > 0) && index > -1) {
                     pairs[index].values = String(Number(pairs[index].values) + 1);
                 } else {
@@ -210,8 +261,9 @@ var RelativeFrequencies = {
                 }
             }
 
+            //Step 2
             for (var j = 0; j < pairs.length; j++) {
-                var pair = Utils.JSAV.createKeyValuePair(av, pairs[j].key, pairs[j].values);
+                pair = Utils.JSAV.createKeyValuePair(av, pairs[j].key, pairs[j].values);
                 pair.mapperId = pairs[j].mapperId;
                 pair.combinerId = (i + 1);
                 pair.addIDContainer("Mapper", (i + 1));
@@ -273,12 +325,16 @@ var RelativeFrequencies = {
         }
     },
     shuffleAndSort: function(input) {
-        var sasArray = [];
+        var sasArray = [],
+            key,
+            values,
+            keyPos,
+            pair;
 
         for(var i = 0; i < input.length; i++) {
-            var key = input[i]._pairData.key;
-            var values = input[i]._pairData.values;
-            var keyPos = Utils.MapReduce.lookupArrayByKey(sasArray, key);
+            key = input[i]._pairData.key;
+            values = input[i]._pairData.values;
+            keyPos = Utils.MapReduce.lookupArrayByKey(sasArray, key);
 
             if(keyPos > -1) {
                 sasArray[keyPos].values += ", " + values;
@@ -303,9 +359,8 @@ var RelativeFrequencies = {
 
         //Step 2
         av.label("The values from all pairs are all placed together in one pair.");
-
         for(var i = 0; i < sasArray.length; i++) {
-            var pair = Utils.JSAV.createKeyValuePair(av, sasArray[i].key, sasArray[i].values);
+            pair = Utils.JSAV.createKeyValuePair(av, sasArray[i].key, sasArray[i].values);
             pair.mapperId = sasArray[i].mapperId;
             pair.reducerId = sasArray[i].reducerId;
             pair.addIDContainer("Reducer", sasArray[i].reducerId);
@@ -319,41 +374,124 @@ var RelativeFrequencies = {
         av.recorded();
     },
     reduce: function(input, numberOfReducers) {
-        var pairCount = input.length;
+        var pairCount = input.length,
+            reducerId,
+            av,
+            marginal,
+            pairValuesTotal,
+            keyPart2,
+            pair,
+            codeMarginal,
+            codeRF,
+            umsg,
+            tempSplit,
+            first;
 
         for(var i = 0; i < numberOfReducers; i++) {
-            var reducerId = Utils.JSAV.createHtmlElement("Reducer", (i + 1));
-            var av = new JSAV(reducerId);
+            reducerId = Utils.JSAV.createHtmlElement("Reducer", (i + 1));
+            av = new JSAV(reducerId);
+            av.label('Marginal Calculation Code:');
+            codeMarginal = av.code([
+                "for all count c in counts [c1, c2, ...]",
+                " sum = sum + c",
+                "Emit(term t, sum)"
+            ]);
+
+            av.label('Relative Frequency Calculation Code:');
+            codeRF = av.code([
+                "for all count c in counts [c1, c2, ...]",
+                " sum = sum + c",
+                "RF = sum / marginal",
+                "Emit(term t, sum or RF)"
+            ]);
 
             //Step 1
-            av.label("Reducer receives data and counts the values to obtain a total word count.");
+            av.label("Reducer receives data and calculates marginal to obtain RF.");
             av.step();
 
             var marginal = 0;
             for(j = 0; j < pairCount; j++) {
                 if(input[j].reducerId === (i + 1)) {
-                    var pairValuesTotal = Utils.MapReduce.getPairValuesTotal(input[j]._pairData.values);
-                    var x = RelativeFrequencies.getPartOfKey(input[j]._pairData.key, 2);
-                    var pair;
-                    if(x === "*") {
-                        marginal = pairValuesTotal;
+                    pairValuesTotal = Utils.MapReduce.getPairValuesTotal(input[j]._pairData.values);
+                    keyPart2 = RelativeFrequencies.getPartOfKey(input[j]._pairData.key, 2);
 
+                    if(keyPart2 === "*") {
+                        //Code highlighting
+                        codeRF.setCurrentLine(0);
+                        codeMarginal.setCurrentLine(1);
+                        av.step();
+
+                        tempSplit = String(input[j]._pairData.values).split(",");
+                        umsg = "Key = " + input[j]._pairData.key + "<br> Marginal = ";
+                        first = true;
+
+                        for(var a = 0; a < tempSplit.length; a++) {
+                            if(first) {
+                                umsg += tempSplit[a];
+                                first = false;
+                            } else {
+                                umsg += " + " + tempSplit[a];
+                            }
+
+                            //Updating umsg and currently highlighted code
+                            av.umsg(umsg);
+                            codeMarginal.setCurrentLine(2);
+                            av.step();
+                        }
+
+                        codeMarginal.setCurrentLine(3);
+
+                        //Reducer Output
+                        marginal = pairValuesTotal;
                         pair = Utils.JSAV.createKeyValuePair(
                             av,
                             input[j]._pairData.key,
                             ("Marginal: " + marginal)
                         );
+                        pair.addIDContainer("Reducer", input[j].reducerId);
+                        pair.layout();
+                        av.step();
                     } else {
+                        //Code highlighting
+                        codeMarginal.setCurrentLine(0);
+                        codeRF.setCurrentLine(1);
+                        av.step();
+
+                        tempSplit = String(input[j]._pairData.values).split(",");
+                        umsg = "Key = " + input[j]._pairData.key + "<br> Sum = ";
+                        first = true;
+
+                        for(var a = 0; a < tempSplit.length; a++) {
+                            if(first) {
+                                umsg += tempSplit[a];
+                                first = false;
+                            } else {
+                                umsg += " + " + tempSplit[a];
+                            }
+
+                            //Updating umsg and currently highlighted code
+                            av.umsg(umsg);
+                            codeRF.setCurrentLine(2);
+                            av.step();
+                        }
+
+                        umsg += "<br> RF = " + pairValuesTotal + " / " + marginal;
+                        av.umsg(umsg);
+                        codeRF.setCurrentLine(3);
+                        av.step();
+
+                        codeRF.setCurrentLine(4);
+
+                        //Reducer Output
                         pair = Utils.JSAV.createKeyValuePair(
                             av,
                             input[j]._pairData.key,
                             (pairValuesTotal + "/" +  marginal + " => " + (pairValuesTotal / marginal).toFixed(2))
                         );
+                        pair.addIDContainer("Reducer", input[j].reducerId);
+                        pair.layout();
+                        av.step();
                     }
-
-                    pair.addIDContainer("Reducer", input[j].reducerId);
-                    pair.layout();
-                    av.step();
                 }
             }
 

@@ -116,7 +116,7 @@ var WordCount = {
             //Step 2
             av.label("For every word, a new key-value pair is created.");
             code = av.code([
-                "for all term t in ",
+                "for all term t in input",
                 " Emit(term t, count 1)"
             ]);
 
@@ -150,11 +150,10 @@ var WordCount = {
         var mapperCount = jsavInstances.length,
             combinerId,
             av,
-            code,
             processedKeys,
             pairs,
-            filteredInput,
-            umsg;
+            pair,
+            filteredInput;
 
         for(var i = 0; i < mapperCount; i++) {
             combinerId = Utils.JSAV.createHtmlElement("Combiner", i + 1);
@@ -166,30 +165,15 @@ var WordCount = {
                 return mapJSAVPairs.mapperId == (i + 1);
             });
 
-            code = av.code([
-                "for all count c in counts [c1, c2, ...]",
-                " sum = sum + c",
-                "Emit(term t, count sum)"
-            ]);
-
             //Step 1
             av.label("A combiner performs local aggregation.");
-            code.setCurrentLine(1);
-            av.step();
-
             for (var j = 0; j < filteredInput.length; j++) {
-                umsg = "Key = " + filteredInput[j]._pairData.key + "<br> Sum = 1";
-
                 if((processedKeys.length > 0) && (processedKeys.indexOf(filteredInput[j]._pairData.key) > -1)) {
                     for(var k = 0; k < pairs.length; k++) {
                         if(pairs[k].key === filteredInput[j]._pairData.key) {
                             var combinerValues = Number(pairs[k].values);
                             combinerValues += 1;
                             pairs[k].values = String(combinerValues);
-
-                            //Updating umsg to track data changes.
-                            av.umsg(umsg + " + 1");
-                            av.step();
                         }
                     }
                 } else {
@@ -199,25 +183,17 @@ var WordCount = {
                         values: filteredInput[j]._pairData.values,
                         mapperId: (i + 1)
                     });
-
-                    //Updating umsg and currently highlighted code.
-                    av.umsg(umsg);
-                    code.setCurrentLine(2);
-                    av.step();
                 }
             }
 
+            //Step 2
             for (var j = 0; j < pairs.length; j++) {
-                var pair = Utils.JSAV.createKeyValuePair(av, pairs[j].key, pairs[j].values);
+                pair = Utils.JSAV.createKeyValuePair(av, pairs[j].key, pairs[j].values);
                 pair.mapperId = pairs[j].mapperId;
                 pair.combinerId = (i + 1);
                 pair.addIDContainer("Mapper", (i + 1));
                 combinerJSAVPairs.push(pair);
                 pair.layout();
-
-                //Updating highlighted code.
-                code.setCurrentLine(3);
-                av.step();
             }
 
             jsavInstances.push(av);
@@ -279,7 +255,8 @@ var WordCount = {
         var sasArray = [],
             key,
             values,
-            keyPos;
+            keyPos,
+            pair;
 
         for(var i = 0; i < input.length; i++) {
             key = input[i]._pairData.key;
@@ -309,9 +286,8 @@ var WordCount = {
 
         //Step 2
         av.label("The values from all pairs are all placed together in one pair.");
-
         for(var i = 0; i < sasArray.length; i++) {
-            var pair = Utils.JSAV.createKeyValuePair(av, sasArray[i].key, sasArray[i].values);
+            pair = Utils.JSAV.createKeyValuePair(av, sasArray[i].key, sasArray[i].values);
             pair.mapperId = sasArray[i].mapperId;
             pair.reducerId = sasArray[i].reducerId;
             pair.addIDContainer("Reducer", sasArray[i].reducerId);
@@ -372,7 +348,7 @@ var WordCount = {
                         av.step();
                     }
 
-                    //Actual Reducer Output
+                    //Reducer Output
                     valuesTotal = Utils.MapReduce.getPairValuesTotal(input[j]._pairData.values);
                     pair = Utils.JSAV.createKeyValuePair(av, input[j]._pairData.key, valuesTotal);
                     pair.addIDContainer("Reducer", input[j].reducerId);

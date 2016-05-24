@@ -409,7 +409,7 @@ var Mean = {
                     reduceJSAVPairs.push(pair);
                     pair.layout();
 
-                    //Updating umsg and currently highlighted code
+                    //Updating currently highlighted code
                     code.setCurrentLine(5);
                     av.step();
                 }
