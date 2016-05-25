@@ -1,14 +1,48 @@
 .page-about {
   height: 100%;
-  padding: 0 10%;
+  color: black;
 
   &.ng-enter {
     -webkit-animation: moveFromLeft 1s ease both;
     animation: moveFromLeft 1s ease both;
   }
 
-  p.about {
+  h2 {
+    text-align: center;
+    font-family: "Chalkduster", "Minion Pro", "Times";
+    font-weight: bold;
+    font-size: 2em;
+    padding-bottom: 10px;
+  }
+
+  p {
     font-family: "Minion Pro";
     font-size: 1.5em;
+  }
+
+  div {
+    padding: 2% 10%;
+
+    &.about-mapreduce {
+      color: white;
+      background-color: #F1625C;
+    }
+
+    &.about-thesite {
+      background-color: #F5B659;
+    }
+
+    &.about-wordcount {
+      background-color: #F2ECBC;
+    }
+
+    &.about-mean {
+      background-color: #8BBDB2;
+    }
+
+    &.about-rf {
+      color: white;
+      background-color: #5E4B51;
+    }
   }
 }

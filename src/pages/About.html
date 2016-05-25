@@ -17,46 +17,88 @@
     </g>
 </svg>
 
-<h2 class="about-title">MapReduce</h2>
+<div class="about-mapreduce">
+    <h2>MapReduce</h2>
 
-<p class="about">
-    MapReduce is a programming model and an associated implementation for processing and generating large data sets
-    with a parallel, distributed algorithm on a cluster. Conceptually similar approaches have been very well known
-    since 1995 with the Message Passing Interface standard having reduce and scatter operations.
-</p>
+    <p>
+        MapReduce is a programming model and an associated implementation for processing and generating large data sets
+        with a parallel, distributed algorithm on a cluster. Conceptually similar approaches have been very well known
+        since 1995 with the Message Passing Interface standard having reduce and scatter operations.
+    </p>
 
-<p class="about">
-    A MapReduce program is composed of a Map() procedure (method) that performs filtering and sorting (such as sorting
-    students by first name into queues, one queue for each name) and a Reduce() method that performs a summary
-    operation (such as counting the number of students in each queue, yielding name frequencies). The "MapReduce
-    System" (also called "infrastructure" or "framework") orchestrates the processing by marshalling the distributed
-    servers, running the various tasks in parallel, managing all communications and data transfers between the various
-    parts of the system, and providing for redundancy and fault tolerance.
-</p>
+    <p>
+        A MapReduce program is composed of a Map() procedure (method) that performs filtering and sorting (such as sorting
+        students by first name into queues, one queue for each name) and a Reduce() method that performs a summary
+        operation (such as counting the number of students in each queue, yielding name frequencies). The "MapReduce
+        System" (also called "infrastructure" or "framework") orchestrates the processing by marshalling the distributed
+        servers, running the various tasks in parallel, managing all communications and data transfers between the various
+        parts of the system, and providing for redundancy and fault tolerance.
+    </p>
 
-<p class="about">
-    The model is inspired by the map and reduce functions commonly used in functional programming, although their
-    purpose in the MapReduce framework is not the same as in their original forms. The key contributions of the
-    MapReduce framework are not the actual map and reduce functions, but the scalability and fault-tolerance achieved
-    for a variety of applications by optimizing the execution engine once. As such, a single-threaded implementation of
-    MapReduce will usually not be faster than a traditional (non-MapReduce) implementation; any gains are usually only
-    seen with multi-threaded implementations. The use of this model is beneficial only when the optimized distributed
-    shuffle operation (which reduces network communication cost) and fault tolerance features of the MapReduce
-    framework come into play. Optimizing the communication cost is essential to a good MapReduce algorithm.
-</p>
+    <p>
+        The model is inspired by the map and reduce functions commonly used in functional programming, although their
+        purpose in the MapReduce framework is not the same as in their original forms. The key contributions of the
+        MapReduce framework are not the actual map and reduce functions, but the scalability and fault-tolerance achieved
+        for a variety of applications by optimizing the execution engine once. As such, a single-threaded implementation of
+        MapReduce will usually not be faster than a traditional (non-MapReduce) implementation; any gains are usually only
+        seen with multi-threaded implementations. The use of this model is beneficial only when the optimized distributed
+        shuffle operation (which reduces network communication cost) and fault tolerance features of the MapReduce
+        framework come into play. Optimizing the communication cost is essential to a good MapReduce algorithm.
+    </p>
 
-<p class="about">
-    MapReduce libraries have been written in many programming languages, with different levels of optimization.
-    A popular open-source implementation that has support for distributed shuffles is part of Apache Hadoop. The name
-    MapReduce originally referred to the proprietary Google technology, but has since been genericized. By 2014,
-    Google was no longer using MapReduce as their primary Big Data processing model, and development on Apache Mahout
-    had moved on to more capable and less disk-oriented mechanisms that incorporated full map and reduce capabilities.
-</p>
+    <p>
+        MapReduce libraries have been written in many programming languages, with different levels of optimization.
+        A popular open-source implementation that has support for distributed shuffles is part of Apache Hadoop. The name
+        MapReduce originally referred to the proprietary Google technology, but has since been genericized. By 2014,
+        Google was no longer using MapReduce as their primary Big Data processing model, and development on Apache Mahout
+        had moved on to more capable and less disk-oriented mechanisms that incorporated full map and reduce capabilities.
+    </p>
 
-<p class="about">[Extracted from Wikipedia]</p>
+    <p>[Extracted from Wikipedia]</p>
+</div>
 
-<h3 class="about-title">Word Count</h3>
+<div class="about-thesite">
+    <h2>About the Site...</h2>
 
-<h3 class="about-title">Mean</h3>
+    <p>
+        This website is aimed at providing multiple, educational and interactive MapReduce algorithm animations. The aim
+        is that of enabling the user to input his own data, and control several algorithm parameters that will affect the
+        produced animation. In several applications provided here, the user can choose to alter the number of Mappers,
+        Reducers, etc... One can also opt to hide or show distinct stages of the animation.
 
-<h3 class="about-title">Relative Frequencies</h3>
+        The site was produced by Matthew Micallef as part of his Individual Project module, during his Advanced Software
+        Engineering course at the University of Leicester. The web application runs on pure front-end technology, mainly
+        HTML5, JavaScript partly through Angular JS 1.X, and CSS3 by using SCSS.
+    </p>
+</div>
+
+<div class="about-wordcount">
+    <h2>Word Count Animation</h2>
+    <p>
+        This is the first animation that was produced. The page accepts any number of words (ideally not too many), from
+        the user's end, and once the animation is run, all MapReduce stages are populated accordingly showing how a
+        MapReduce algorithm calculates and gathers the word count accordingly.
+    </p>
+</div>
+
+<div class="about-mean">
+    <h2>Mean Animation</h2>
+
+    <p>
+        The Mean animation accepts a series of key-value pairs in the form of words and numbers respectively. The algorithm
+        then depicts how it can gather the entries by their key and finally output the mean related to all values grouped
+        by the same key.
+    </p>
+</div>
+
+<div class="about-rf">
+
+    <h2>Relative Frequencies Animation</h2>
+
+    <p>
+        The Relative Frequencies computation is a slightly more complex animation. The user expected input is once again,
+        that of a series of words. However, here the MapReduce algorithm is concerned with calculation the co-occurrence
+        rate for every word in relation to every other word (on the same line). The animation explains in a specific level
+        of detail how this result is achieved.
+    </p>
+</div>
