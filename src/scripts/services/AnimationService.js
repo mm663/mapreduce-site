@@ -6,7 +6,7 @@ var animationService = function() {
     var useCombiners = false;
     var showPartitioners = false;
     var animationDisabled = true;
-    var jsavInstances = [];
+    var jsavInstances = null;
 
     this.isUsingCombiners = function() {
         return useCombiners;
@@ -45,6 +45,6 @@ var animationService = function() {
         useCombiners = false;
         showPartitioners = false;
         animationDisabled = true;
-        jsavInstances = [];
+        jsavInstances = null;
     };
 };

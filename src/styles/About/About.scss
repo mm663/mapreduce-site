@@ -21,28 +21,38 @@
   }
 
   div {
+    text-align: justify;
     padding: 2% 10%;
 
-    &.about-mapreduce {
-      color: white;
+    .center {
+      text-align: center;
+    }
+
+    .read-toggle {
+      float: right;
+      cursor: pointer;
+      font-weight: bold;
+      outline: none;
+    }
+
+    &#about-mapreduce {
       background-color: #F1625C;
     }
 
-    &.about-thesite {
+    &#about-thesite {
       background-color: #F5B659;
     }
 
-    &.about-wordcount {
+    &#about-wordcount {
       background-color: #F2ECBC;
     }
 
-    &.about-mean {
+    &#about-mean {
       background-color: #8BBDB2;
     }
 
-    &.about-rf {
-      color: white;
-      background-color: #5E4B51;
+    &#about-rf {
+      background-color: #9a838a;
     }
   }
 }
