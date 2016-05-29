@@ -14,18 +14,24 @@
     font-family: "Minion Pro";
     font-size: 1.5em; }
   .page-about div {
+    text-align: justify;
     padding: 2% 10%; }
-    .page-about div.about-mapreduce {
-      color: white;
+    .page-about div .center {
+      text-align: center; }
+    .page-about div .read-toggle {
+      float: right;
+      cursor: pointer;
+      font-weight: bold;
+      outline: none; }
+    .page-about div#about-mapreduce {
       background-color: #F1625C; }
-    .page-about div.about-thesite {
+    .page-about div#about-thesite {
       background-color: #F5B659; }
-    .page-about div.about-wordcount {
+    .page-about div#about-wordcount {
       background-color: #F2ECBC; }
-    .page-about div.about-mean {
+    .page-about div#about-mean {
       background-color: #8BBDB2; }
-    .page-about div.about-rf {
-      color: white;
-      background-color: #5E4B51; }
+    .page-about div#about-rf {
+      background-color: #9a838a; }
 
 /*# sourceMappingURL=About.css.map */

@@ -5,6 +5,7 @@
 var menuController = function($scope, animationService, $timeout) {
     $scope.showLoader = false;
     $scope.mapperPerLine = false;
+    $scope.showMenu = true;
 
     $scope.toggleMapperPerLine = function() {
         $scope.mapperPerLine = !$scope.mapperPerLine;
@@ -13,9 +14,9 @@ var menuController = function($scope, animationService, $timeout) {
     $scope.toggleMenu = function() {
         $scope.showMenu = !$scope.showMenu;
         if($scope.showMenu) {
-            $("#menuOptions").slideUp("slow");
-        } else {
             $("#menuOptions").slideDown("slow");
+        } else {
+            $("#menuOptions").slideUp("slow");
         }
     };
 
