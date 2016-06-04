@@ -13,7 +13,7 @@ var meanLabelDirective = function() {
         template: "<span class='label label-default' ng-click='highlight()'>" +
                     "Key: {{key}} Integer: {{integer}}" +
                   "</span>",
-        link: function(scope, element, attrs) {
+        link: function(scope, element) {
             scope.highlight = function() {
                 if(element.hasClass('label-info')) {
                     element.removeClass('label-info');
