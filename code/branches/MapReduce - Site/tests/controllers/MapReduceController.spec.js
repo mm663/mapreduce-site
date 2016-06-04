@@ -29,10 +29,6 @@ describe('MapReduceController', function() {
         });
     }));
 
-    xdescribe('toggleMapReduceSection', function() {
-        //TODO: Later
-    });
-
     describe('showCombiners', function() {
         it('must call animationService.isUsingCombiners()', function() {
             scope.showCombiners();

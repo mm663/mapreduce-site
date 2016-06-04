@@ -39,20 +39,13 @@ describe('MeanController', function() {
         expect(animationService.reset).toHaveBeenCalled();
     });
 
-    xdescribe('addToList', function() {
-        it('', function() {
-
+    describe('hasSelectedElements', function() {
+        it('should return false', function() {
+            var result = scope.hasSelectedElements();
+            expect(result).toBeFalsy();
         });
-    });
 
-    xdescribe('hasSelectedElements', function() {
-        it('', function() {
-
-        });
-    });
-
-    xdescribe('removeSelectedElements', function() {
-        it('', function() {
+        it('should return true if clicked', function() {
 
         });
     });
