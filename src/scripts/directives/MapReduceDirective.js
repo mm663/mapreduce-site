@@ -8,6 +8,23 @@ var mapReduceDirective = function() {
         scope: { },
         replace: true,
         templateUrl: "templates/MapReduce.html",
-        controller: mapReduceController
+        controller: mapReduceController,
+        link: function(scope) {
+            scope.toggleMapReduceSection = function(sectionName) {
+                var element = document.getElementById(sectionName);
+                if(element) {
+                    if(element.clientHeight === 0) {
+                        $(element).slideDown("slow");
+
+                        var canvas = element.getElementsByClassName("jsavcanvas");
+                        if(canvas) {
+                            $(canvas[0]).scrollintoview();
+                        }
+                    } else {
+                        $(element).slideUp("slow");
+                    }
+                }
+            };
+        }
     };
 };
