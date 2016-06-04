@@ -44,14 +44,6 @@ describe('MenuController', function() {
         });
     });
 
-    xdescribe('toggleMenu', function() {
-        it('toggles the value of showMenu', function() {
-            scope.toggleMenu();
-            expect(scope.showMenu).toBeFalsy();
-            //TODO: Check how to pass jQuery.
-        });
-    });
-
     describe('toggleUseCombiners', function() {
         it('calls animationService.toggleUseCombiners()', function() {
             scope.toggleUseCombiners();
@@ -63,12 +55,6 @@ describe('MenuController', function() {
         it('calls animationService.toggleShowPartitioners()', function() {
             scope.toggleShowPartitioners();
             expect(animationService.toggleShowPartitioners).toHaveBeenCalled();
-        });
-    });
-
-    xdescribe('runMapReduce', function() {
-        it('', function() {
-            //TODO: Later.
         });
     });
 });
