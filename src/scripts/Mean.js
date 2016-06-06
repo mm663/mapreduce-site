@@ -59,23 +59,27 @@ var Mean = {
         }
     },
     processInput: function(input, mapperCount) {
-        var mapperShare = Math.floor(input.length / mapperCount),
+        if(input && mapperCount > 0) {
+            var mapperShare = Math.floor(input.length / mapperCount),
             mapperId = 0,
             mapperInput = input;
 
-        for (var i = 0; i < input.length; i++) {
-            if((i % mapperShare) === 0) {
-                mapperId++;
+            for (var i = 0; i < input.length; i++) {
+                if((i % mapperShare) === 0) {
+                    mapperId++;
+                }
+
+                if(mapperId > mapperCount) {
+                    mapperId = mapperCount;
+                }
+
+                mapperInput[i].mapperId = mapperId;
             }
 
-            if(mapperId > mapperCount) {
-                mapperId = mapperCount;
-            }
-
-            mapperInput[i].mapperId = mapperId;
+            return mapperInput;   
         }
-
-        return mapperInput;
+        
+        return null;
     },
     map: function(input, mapperCount) {
         var arrCounter = 0,
@@ -432,17 +436,21 @@ var Mean = {
         return content[1].trim().substr(0, 1);
     },
     getPairValuesAverage: function(values) {
-        var valuesSplit = values.split(', p');
-        var sum = 0;
-        var count = 0;
+        if(values) {
+            var valuesSplit = values.split(', p');
+            var sum = 0;
+            var count = 0;
 
-        for(var i = 0; i < valuesSplit.length; i++) {
-            sum += Number(Mean.getSumFromPair(valuesSplit[i]));
-            count += Number(Mean.getCountFromPair(valuesSplit[i]));
+            for(var i = 0; i < valuesSplit.length; i++) {
+                sum += Number(Mean.getSumFromPair(valuesSplit[i]));
+                count += Number(Mean.getCountFromPair(valuesSplit[i]));
+            }
+
+            var average = (sum / count).toFixed(2);
+            return [sum, count, average];
         }
-
-        var average = (sum / count).toFixed(2);
-        return [sum, count, average];
+        
+        return null;
     },
     reset: function() {
         mapJSAVPairs = [];

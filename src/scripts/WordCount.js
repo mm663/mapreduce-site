@@ -63,35 +63,40 @@ var WordCount = {
         }
     },
     processInput: function(input, mapperPerLine, mapperCount) {
-        var newLineSplit = Utils.MapReduce.trimAllEntries(input.split("\n"));
-        if(mapperPerLine) {
-            return newLineSplit;
-        } else {
-            var splitLength = newLineSplit.length;
-            if(splitLength > 1) {
-                var mapperShare = Math.floor(splitLength / mapperCount);
-                var mapperInput = [];
-                var mapperId = -1;
-
-                for(var i = 0; i < splitLength; i++) {
-                    if((i % mapperShare) === 0 && (mapperId + 1 !== mapperCount)) {
-                        mapperId++;
-                    }
-
-                    if(mapperInput[mapperId] === undefined) {
-                        mapperInput[mapperId] = newLineSplit[i];
-                    } else {
-                        mapperInput[mapperId] += " " + newLineSplit[i]
-                    }
-                }
-
-                return mapperInput;
+        if(input && mapperCount > 0) {
+            var newLineSplit = Utils.MapReduce.trimAllEntries(input.split("\n"));
+            
+            if(mapperPerLine) {
+                return newLineSplit;
             } else {
-                //Otherwise split by number of words
-                var slicedInput = Utils.MapReduce.getInputsByChunk(input, mapperCount);
-                return Utils.MapReduce.trimAllEntries(slicedInput);
+                var splitLength = newLineSplit.length;
+                if(splitLength > 1) {
+                    var mapperShare = Math.floor(splitLength / mapperCount);
+                    var mapperInput = [];
+                    var mapperId = -1;
+
+                    for(var i = 0; i < splitLength; i++) {
+                        if((i % mapperShare) === 0 && (mapperId + 1 !== mapperCount)) {
+                            mapperId++;
+                        }
+
+                        if(mapperInput[mapperId] === undefined) {
+                            mapperInput[mapperId] = newLineSplit[i];
+                        } else {
+                            mapperInput[mapperId] += " " + newLineSplit[i]
+                        }
+                    }
+
+                    return mapperInput;
+                } else {
+                    //Otherwise split by number of words
+                    var slicedInput = Utils.MapReduce.getInputsByChunk(input, mapperCount);
+                    return Utils.MapReduce.trimAllEntries(slicedInput);
+                }
             }
         }
+        
+        return null;
     },
     map: function(input) {
         var mapperId,

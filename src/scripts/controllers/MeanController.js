@@ -3,6 +3,7 @@
  */
 
 var meanController = function($scope, $compile, animationService) {
+    $ = jQuery;
     $scope.inputList = [];
     $scope.userInput = false;
     $scope.pageClass = 'page-mean';

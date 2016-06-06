@@ -3,6 +3,7 @@
  */
 
 var menuController = function($scope, animationService, $timeout) {
+    $ = jQuery;
     $scope.showLoader = false;
     $scope.mapperPerLine = false;
     $scope.showMenu = true;
