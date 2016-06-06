@@ -62,36 +62,40 @@ var RelativeFrequencies = {
         }
     },
     processInput: function(input, mapperPerLine, mapperCount) {
-        var newLineSplit = Utils.MapReduce.trimAllEntries(input.split("\n"));
+        if(input && mapperCount > 0) {
+            var newLineSplit = Utils.MapReduce.trimAllEntries(input.split("\n"));
 
-        if(mapperPerLine) {
-            return newLineSplit;
-        } else {
-            var splitLength = newLineSplit.length;
-            if(splitLength > 1) {
-                var mapperShare = Math.floor(splitLength / mapperCount);
-                var mapperInput = [];
-                var mapperId = -1;
-
-                for(var i = 0; i < splitLength; i++) {
-                    if((i % mapperShare) === 0 && (mapperId + 1 !== mapperCount)) {
-                        mapperId++;
-                    }
-
-                    if(mapperInput[mapperId] === undefined) {
-                        mapperInput[mapperId] = newLineSplit[i];
-                    } else {
-                        mapperInput[mapperId] += " \n " + newLineSplit[i]
-                    }
-                }
-
-                return mapperInput;
+            if(mapperPerLine) {
+                return newLineSplit;
             } else {
-                //Otherwise split by number of words
-                var slicedInput = Utils.MapReduce.getInputsByChunk(input, mapperCount);
-                return Utils.MapReduce.trimAllEntries(slicedInput);
+                var splitLength = newLineSplit.length;
+                if(splitLength > 1) {
+                    var mapperShare = Math.floor(splitLength / mapperCount);
+                    var mapperInput = [];
+                    var mapperId = -1;
+
+                    for(var i = 0; i < splitLength; i++) {
+                        if((i % mapperShare) === 0 && (mapperId + 1 !== mapperCount)) {
+                            mapperId++;
+                        }
+
+                        if(mapperInput[mapperId] === undefined) {
+                            mapperInput[mapperId] = newLineSplit[i];
+                        } else {
+                            mapperInput[mapperId] += " \n " + newLineSplit[i]
+                        }
+                    }
+
+                    return mapperInput;
+                } else {
+                    //Otherwise split by number of words
+                    var slicedInput = Utils.MapReduce.getInputsByChunk(input, mapperCount);
+                    return Utils.MapReduce.trimAllEntries(slicedInput);
+                }
             }
         }
+        
+        return null;
     },
     map: function(input) {
         var mapperId,
@@ -207,22 +211,27 @@ var RelativeFrequencies = {
     },
     getNeighbors: function(line, word) {
         //Neighbors of a word are all words on the same line.
-        var neighbors = [];
-        var lineSplit = line.split(" ");
-        var wordInstanceCounter = 0;
-        for(var i = 0; i < lineSplit.length; i++) {
-            if(lineSplit[i] !== word) {
-                neighbors.push(lineSplit[i]);
-            } else {
-                if(wordInstanceCounter === 1) {
+        
+        if(line && word) {
+            var neighbors = [];
+            var lineSplit = line.split(" ");
+            var wordInstanceCounter = 0;
+            for(var i = 0; i < lineSplit.length; i++) {
+                if(lineSplit[i] !== word) {
                     neighbors.push(lineSplit[i]);
+                } else {
+                    if(wordInstanceCounter === 1) {
+                        neighbors.push(lineSplit[i]);
+                    }
+
+                    wordInstanceCounter++;
                 }
-
-                wordInstanceCounter++;
             }
-        }
 
-        return neighbors;
+            return neighbors;
+        }
+        
+        return null;
     },
     combine: function(input) {
         //Pairs of the form (w, u) & (u, w) will be combined
@@ -500,13 +509,17 @@ var RelativeFrequencies = {
         }
     },
     arrayContainsPair: function(array, key) {
-        for (var i = 0; i < array.length; i++) {
-            if(RelativeFrequencies.getKeyEquality(array[i], key)) {
-                return i;
+        if(array && key) {
+            for (var i = 0; i < array.length; i++) {
+                if(RelativeFrequencies.getKeyEquality(array[i], key)) {
+                    return i;
+                }
             }
-        }
 
-        return -1;
+            return -1;
+        }
+        
+        return null;
     },
     getPartOfKey: function(key, part) {
         var keySplit = key.split(',');

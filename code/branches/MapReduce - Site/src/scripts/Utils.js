@@ -16,11 +16,11 @@ var Utils = {
         getInputsByChunk: function(input, mapperCount) {
             const SPACE = " ";
 
-            if(input) {
+            if(input && mapperCount > 0) {
                 var chunksArray = [];
                 var counter = 0;
 
-                //Fixme: assuming only spaces between words
+                //Assuming only spaces between words
                 var inputSplit = input.split(" ");
                 var mapperSize = Math.floor(inputSplit.length / mapperCount);
 
@@ -48,7 +48,7 @@ var Utils = {
         hashCode: function(value) {
             var hash = 0;
 
-            if (value.length == 0)
+            if (!value || value.length == 0)
                 return hash;
 
             for (var i = 0; i < value.length; i++) {
@@ -60,28 +60,39 @@ var Utils = {
             return Math.abs(hash);
         },
         sortByKey: function(array, key) {
-            return array.sort(function(a, b) {
-                //Sorts array by key
-                var x = a[key];
-                var y = b[key];
+            if(array && key) {
+                return array.sort(function(a, b) {
+                    //Sorts array by key
+                    var x = a[key];
+                    var y = b[key];
 
-                return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-            });
+                    return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+                });
+            }
+
+            return null;
         },
         lookupArrayByKey: function(array, key) {
-            for(var i = 0, len = array.length; i < len; i++) {
-                if(array[i].key === key) {
-                    return i; //Returns position of found key.
+            if(array && key) {
+                for(var i = 0, len = array.length; i < len; i++) {
+                    if(array[i].key === key) {
+                        return i; //Returns position of found key.
+                    }
                 }
             }
+
             return -1; //Key not found
         },
         trimAllEntries: function(arrayToTrim) {
-            for(var i = 0; i < arrayToTrim.length; i++) {
-                arrayToTrim[i] = arrayToTrim[i].trim();
+            if(arrayToTrim) {
+                for(var i = 0; i < arrayToTrim.length; i++) {
+                    arrayToTrim[i] = arrayToTrim[i].trim();
+                }
+
+                return arrayToTrim;
             }
 
-            return arrayToTrim;
+            return null;
         },
         getPairValuesTotal: function(values) {
             if(typeof(values) === "number") {
@@ -94,6 +105,8 @@ var Utils = {
                 }
                 return valueCount;
             }
+            
+            return -1;
         },
         reset: function() {
             document.getElementById("mapperContainer").innerHTML = "";

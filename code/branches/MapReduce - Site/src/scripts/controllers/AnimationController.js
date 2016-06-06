@@ -61,7 +61,6 @@ var animationController = function($scope, animationService, $timeout) {
     };
 
     var pause = function() {
-        console.log("Pausing");
         $timeout.cancel(timer);
     };
 
