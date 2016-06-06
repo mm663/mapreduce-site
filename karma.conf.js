@@ -10,7 +10,17 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine'],
+    frameworks: ['jasmine-jquery', 'jasmine'],
+
+
+    plugins: [
+        'karma-jasmine',
+        'karma-jasmine-jquery',
+        'karma-coverage',
+        'karma-ng-html2js-preprocessor',
+        'karma-chrome-launcher',
+        'karma-mocha-reporter'
+    ],
 
 
     // list of files / patterns to load in the browser
@@ -34,7 +44,7 @@ module.exports = function(config) {
         './src/scripts/directives/MapReduceDirective.js',
         './src/scripts/directives/MeanLabelDirective.js',
         './src/scripts/directives/MenuDirective.js',
-        './src/**/*.js',
+        './src/scripts/**/*.js',
         './tests/**/*.spec.js',
 
         //location of templates
@@ -52,19 +62,30 @@ module.exports = function(config) {
     preprocessors: {
         './src/templates/AnimationControls.html': ['ng-html2js'],
         './src/templates/MapReduce.html': ['ng-html2js'],
-        './src/templates/Menu.html': ['ng-html2js']
+        './src/templates/Menu.html': ['ng-html2js'],
+        './src/scripts/controllers/*.js': ['coverage'],
+        './src/scripts/directives/*.js': ['coverage'],
+        './src/scripts/services/*.js': ['coverage'],
+        './src/scripts/*.js': ['coverage']
     },
+
 
     ngHtml2JsPreprocessor: {
         // strip app from the file path
         stripPrefix: 'src/'
     },
 
+
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ['mocha', 'coverage'],
 
+
+    // reporter options
+    mochaReporter: {
+        output: 'full'
+    },
 
     // web server port
     port: 9876,
@@ -92,8 +113,9 @@ module.exports = function(config) {
     // if true, Karma captures browsers, runs the tests and exits
     singleRun: false,
 
+
     // Concurrency level
     // how many browser should be started simultaneous
     concurrency: Infinity
   })
-}
+};
