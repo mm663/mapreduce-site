@@ -39,14 +39,49 @@ describe('MeanController', function() {
         expect(animationService.reset).toHaveBeenCalled();
     });
 
+    describe('addToList', function() {
+        beforeEach(function() {
+            var element = document.createElement('test');
+            element.value = 2;
+
+            spyOn(document, 'getElementById').and.returnValue(element);
+            scope.addToList();
+        });
+
+
+        it('should add an item to scope.inputList', function() {
+            expect(scope.inputList.length).toBe(1);
+        });
+
+        it('should change scope.userInput to true', function() {
+            expect(scope.userInput).toBeTruthy();
+        });
+    });
+
     describe('hasSelectedElements', function() {
         it('should return false', function() {
             var result = scope.hasSelectedElements();
             expect(result).toBeFalsy();
         });
+    });
 
-        it('should return true if clicked', function() {
+    describe('removeSelectedElements', function() {
+        beforeEach(function() {
+            var element = document.createElement('test');
+            element.className = 'label-info';
+            element.value = 2;
+            element.setAttribute("key", "2");
 
+            spyOn(document, 'getElementsByClassName').and.returnValue([element]);
+            spyOn(document, 'getElementById').and.returnValue(element);
+
+            scope.addToList();
+            scope.removeSelectedElements();
+        });
+
+
+        it('should add an item to scope.inputList', function() {
+            expect(scope.inputList.length).toBe(0);
         });
     });
 });
