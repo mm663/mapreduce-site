@@ -50,4 +50,6 @@ describe('MapReduceDirective', function () {
             expect(sections[4].innerHTML).toContain('Reduce');
         });
     });
+
+    //Note: Cannot test link function (toggleMapReduceSection) since it only manipulates DOM elements.
 });

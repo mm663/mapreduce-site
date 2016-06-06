@@ -23,8 +23,6 @@ describe('AnimationController', function() {
             $scope: scope,
             animationService: animationService
         });
-
-        spyOn(scope, 'togglePlayStatus');
     }));
 
     it('assigns a playStatus to the scope', function() {
@@ -57,9 +55,28 @@ describe('AnimationController', function() {
     });
 
     describe('animate', function() {
-        it('must return false', function() {
+        beforeEach(function() {
+            spyOn(scope, 'togglePlayStatus');
             scope.animate();
+        });
+
+        it('must call scope.togglePlayStatus', function() {
             expect(scope.togglePlayStatus).toHaveBeenCalled();
+        });
+    });
+
+    describe('togglePlayStatus', function() {
+        beforeEach(function() {
+            scope.togglePlayStatus();
+        });
+
+        it('must change playStatus to PAUSE on first call', function() {
+            expect(scope.playStatus).toBe('PAUSE');
+        });
+
+        it('must change playStatus to PLAY on an alternate call', function() {
+            scope.togglePlayStatus();
+            expect(scope.playStatus).toBe('PLAY');
         });
     });
 

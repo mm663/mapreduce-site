@@ -63,8 +63,12 @@ describe('MeanLabelDirective', function () {
                 scope.$digest();
             });
 
-            it('should add a label-info class to the element', function() {
+            it('should add a label-info class to the element on first click', function() {
                 expect(element.hasClass('label-info')).toBeTruthy();
+            });
+
+            it('should remove a label-info class from the element on an alternate click', function() {
+                expect(element.hasClass('label-info')).toBeFalsy();
             });
         });
     });

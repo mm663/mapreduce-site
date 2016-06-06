@@ -62,6 +62,14 @@ describe('AnimationService', function () {
         });
     });
 
+    describe('setJSAVInstances', function () {
+        it('must set the JSAV instances', function () {
+            animationService.setJSAVInstances(1);
+            var result = animationService.getJSAVInstances();
+            expect(result).toBe(1);
+        });
+    });
+
     describe('reset', function () {
         it('must reset all variables to the initial value', function () {
             animationService.reset();
