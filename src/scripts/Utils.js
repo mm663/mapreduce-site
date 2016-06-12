@@ -117,6 +117,35 @@ var Utils = {
         }
     },
     JSAV: {
+        createExerciseContainer: function(title) {
+            var container = document.getElementById("mapReduceExercise");
+
+            if(container) {
+                var h1 = document.createElement("h1");
+                h1.innerHTML = title;
+                container.appendChild(h1);
+
+                var settingsAnchor = document.createElement("a");
+                settingsAnchor.className = "jsavsettings";
+                settingsAnchor.href = "#";
+                settingsAnchor.innerHTML = "Settings";
+
+                var controls = document.createElement("p");
+                controls.align = "center";
+                controls.className = "jsavexercisecontrols";
+
+                controls.appendChild(settingsAnchor);
+                container.appendChild(controls);
+
+                var score = document.createElement("p");
+                score.className = "jsavscore";
+                container.appendChild(score);
+
+                var output = document.createElement("p");
+                output.className = "jsavoutput jsavline";
+                container.appendChild(output);
+            }
+        },
         createHtmlElement: function(type, count) {
             var container;
 

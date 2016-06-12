@@ -1,0 +1,35 @@
+<div class="exercise">
+    <svg id="pageTitle">
+        <symbol id="s-text">
+            <text text-anchor="middle"
+                  x="50%"
+                  y="65px"
+                  class="text--line">
+                Word Count Exercise
+            </text>
+        </symbol>
+
+        <g class="g-ants">
+            <use xlink:href="#s-text" class="text-copy"></use>
+            <use xlink:href="#s-text" class="text-copy"></use>
+            <use xlink:href="#s-text" class="text-copy"></use>
+            <use xlink:href="#s-text" class="text-copy"></use>
+            <use xlink:href="#s-text" class="text-copy"></use>
+        </g>
+    </svg>
+
+    <map-reduce-exercise name="WordCount"></map-reduce-exercise>
+
+    <md-button id="checkExercise"
+               class="md-raised"
+               ng-click="checkAnswers()">
+        Check Exercise
+    </md-button>
+
+    <md-button id="nextExercise"
+               class="md-raised"
+               ng-if="currentExerciseCorrect"
+               ng-click="loadNextExercise()">
+        Next Exercise
+    </md-button>
+</div>
