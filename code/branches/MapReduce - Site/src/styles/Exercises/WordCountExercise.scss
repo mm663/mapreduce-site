@@ -1,0 +1,18 @@
+.page-exercises-wordcount {
+  text-align: center;
+
+  &.ng-enter {
+    -webkit-animation: moveFromBottom 1s ease both;
+    animation: moveFromBottom 1s ease both;
+  }
+
+  #checkExercise {
+    margin-top: 20px;
+    background-color: #42505D;
+    color: white;
+  }
+
+  #nextExercise {
+    background-color: #8BBDB2;
+  }
+}

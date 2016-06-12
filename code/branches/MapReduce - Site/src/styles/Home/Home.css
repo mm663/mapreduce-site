@@ -8,34 +8,14 @@
   .page-home.ng-enter {
     -webkit-animation: moveFromRight 1s ease both;
     animation: moveFromRight 1s ease both; }
-  .page-home section {
-    display: inline-block; }
-  .page-home .btn {
-    display: block;
-    float: left;
-    padding: 60px 0 0 0;
-    margin: 12px;
-    color: white;
-    background-color: indianred;
-    box-sizing: border-box;
-    font-size: 15px;
-    width: 150px;
-    height: 150px;
-    -webkit-border-radius: 150px;
-    -moz-border-radius: 150px;
-    border-radius: 150px;
-    transition: all 500ms; }
-  .page-home .btn:hover {
-    background-color: #A44949;
-    -webkit-transform: scale(1.1);
-    -moz-transform: scale(1.1);
-    -ms-transform: scale(1.1);
-    -o-transform: scale(1.1);
-    transform: scale(1.1); }
+  .page-home p {
+    width: 100%;
+    text-align: center; }
 
 .home {
   height: 100%;
   background-color: #FFB266;
-  color: #a55400; }
+  color: #a55400;
+  overflow: scroll; }
 
 /*# sourceMappingURL=Home.css.map */

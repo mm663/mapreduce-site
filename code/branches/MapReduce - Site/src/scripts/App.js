@@ -18,9 +18,13 @@ app.controller('meanController', meanController);
 app.controller('menuController', menuController);
 app.controller('relativeFrequenciesController', relativeFrequenciesController);
 app.controller('wordCountController', wordCountController);
+app.controller('exercisesController', exercisesController);
+app.controller('mapReduceExerciseController', mapReduceExerciseController);
+app.controller('wordCountExerciseController', wordCountExerciseController);
 
 //directives
 app.directive('animationMenu', animationMenuDirective);
 app.directive('mapReduce', mapReduceDirective);
 app.directive('animationControls', animationControlsDirective);
 app.directive('meanLabel', meanLabelDirective);
+app.directive('mapReduceExercise', mapReduceExerciseDirective);

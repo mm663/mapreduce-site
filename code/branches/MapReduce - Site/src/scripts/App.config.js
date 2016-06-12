@@ -11,7 +11,6 @@ var appConfig = function($routeProvider) {
             controller: homeController
         })
 
-        //TODO: route for the home page
         .when('/about', {
             templateUrl: 'pages/About.html',
             controller: aboutController
@@ -33,5 +32,17 @@ var appConfig = function($routeProvider) {
         .when('/relativefrequencies', {
             templateUrl: 'pages/RelativeFrequencies.html',
             controller: relativeFrequenciesController
+        })
+        
+        // route for the exercises main page
+        .when('/exercises', {
+            templateUrl: 'pages/Exercises.html',
+            controller: exercisesController
+        })
+        
+        // route for the exercises page
+        .when('/exercises/wordcount', {
+            templateUrl: 'pages/exercises/WordCountExercise.html',
+            controller: wordCountExerciseController
         })
 };

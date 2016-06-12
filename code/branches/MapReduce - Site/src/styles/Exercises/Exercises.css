@@ -1,0 +1,67 @@
+.page-exercises {
+  color: black;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0; }
+  .page-exercises.ng-enter {
+    -webkit-animation: moveFromRight 1s ease both;
+    animation: moveFromRight 1s ease both; }
+  .page-exercises h1 {
+    margin: 50px auto; }
+  .page-exercises p {
+    width: 100%;
+    text-align: center; }
+
+.exercises {
+  height: 100%;
+  background-color: #8BBDB2;
+  color: #F2ECBC;
+  overflow: scroll; }
+
+.exercise .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair,
+.jsavmodelanswer .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair {
+  min-width: 40%;
+  border: 2px solid #8BBDB2;
+  background-color: #42505D; }
+  .exercise .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair .jsav-pair-values,
+  .jsavmodelanswer .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair .jsav-pair-values {
+    border-left: 2px solid #8BBDB2; }
+
+.exercise #mapReduceExercise {
+  padding-bottom: 30px; }
+.exercise .jsavcontainer {
+  margin: 0 20%;
+  border: 2px solid #A2BCA3;
+  border-radius: 20px;
+  text-align: center;
+  background-color: black; }
+  .exercise .jsavcontainer .jsavscore,
+  .exercise .jsavcontainer .jsavoutput.jsavline {
+    font-size: 1.2em; }
+  .exercise .jsavcontainer .jsavoutput.jsavline div {
+    color: white !important; }
+  .exercise .jsavcontainer .jsavline {
+    height: auto; }
+  .exercise .jsavcontainer .jsavexercisecontrols input[name="reset"] {
+    margin-left: 25px;
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 7px; }
+  .exercise .jsavcontainer .jsavexercisecontrols input[name="answer"] {
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px; }
+  .exercise .jsavcontainer .jsavexercisecontrols input[name="undo"],
+  .exercise .jsavcontainer .jsavexercisecontrols input[type="button"]:last-of-type {
+    display: none; }
+  .exercise .jsavcontainer .correct {
+    background-color: #32CD32; }
+  .exercise .jsavcontainer .incorrect {
+    background-color: #CD0000; }
+.exercise a.jsavsettings {
+  margin: 0 auto; }
+
+.exerciseDialog {
+  color: black; }
+
+/*# sourceMappingURL=Exercises.css.map */
