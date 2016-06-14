@@ -20,11 +20,21 @@
   color: #F2ECBC;
   overflow: scroll; }
 
+.exercise .jsavoutput,
+.jsavmodelanswer .jsavoutput {
+  text-align: center;
+  font-size: 1.2em;
+  margin-top: 10px; }
 .exercise .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair,
 .jsavmodelanswer .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair {
   min-width: 40%;
   border: 2px solid #8BBDB2;
   background-color: #42505D; }
+  .exercise .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair .jsav-pair-key:hover,
+  .exercise .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair .jsav-pair-values:hover,
+  .jsavmodelanswer .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair .jsav-pair-key:hover,
+  .jsavmodelanswer .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair .jsav-pair-values:hover {
+    background-color: #649bb0; }
   .exercise .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair .jsav-pair-values,
   .jsavmodelanswer .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair .jsav-pair-values {
     border-left: 2px solid #8BBDB2; }
@@ -37,7 +47,6 @@
   border-radius: 20px;
   text-align: center;
   background-color: black; }
-  .exercise .jsavcontainer .jsavscore,
   .exercise .jsavcontainer .jsavoutput.jsavline {
     font-size: 1.2em; }
   .exercise .jsavcontainer .jsavoutput.jsavline div {

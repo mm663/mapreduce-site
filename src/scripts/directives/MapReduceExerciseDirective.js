@@ -6,7 +6,8 @@ var mapReduceExerciseDirective = function() {
     return {
         restrict: 'E',
         scope: {
-            name: '@name'
+            name: '@name',
+            type: '@type'
         },
         replace: true,
         templateUrl: "templates/MapReduceExercise.html",

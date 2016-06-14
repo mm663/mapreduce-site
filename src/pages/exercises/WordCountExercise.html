@@ -18,7 +18,23 @@
         </g>
     </svg>
 
-    <map-reduce-exercise name="WordCount"></map-reduce-exercise>
+    <map-reduce-exercise
+            name="WordCount"
+            type="Mapper"
+            ng-if="currentExercise === 'Mapper'">
+    </map-reduce-exercise>
+
+    <map-reduce-exercise
+            name="WordCount"
+            type="ShuffleAndSort"
+            ng-if="currentExercise === 'ShuffleAndSort'">
+    </map-reduce-exercise>
+
+    <map-reduce-exercise
+            name="WordCount"
+            type="Reducer"
+            ng-if="currentExercise === 'Reducer'">
+    </map-reduce-exercise>
 
     <md-button id="checkExercise"
                class="md-raised"
