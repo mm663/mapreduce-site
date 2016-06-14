@@ -4,6 +4,10 @@
 
 var mapReduceExerciseController = function($scope) {
     if($scope.name === "WordCount") {
-        WordCountExercise.run();
+        if($scope.type === "Mapper") {
+            WordCountExercise.Mapper.run();
+        } else if ($scope.type === "ShuffleAndSort") {
+            WordCountExercise.ShuffleAndSort.run();
+        }
     }
 };

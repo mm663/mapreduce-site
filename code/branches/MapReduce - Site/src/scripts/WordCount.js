@@ -270,6 +270,7 @@ var WordCount = {
 
             if(keyPos > -1) {
                 sasArray[keyPos].values += ", " + values;
+                sasArray[keyPos].mapperId += ", " + input[i].mapperId;
             } else {
                 sasArray.push({
                     key: key,

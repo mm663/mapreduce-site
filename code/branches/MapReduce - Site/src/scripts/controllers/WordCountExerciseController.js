@@ -1,10 +1,10 @@
 var wordCountExerciseController = function($scope) {
     $scope.pageClass = 'page-exercises-wordcount';
-    $scope.currentSection = 'Mapper';
+    $scope.currentExercise = 'ShuffleAndSort';
     $scope.currentExerciseCorrect = false;
 
     $scope.checkAnswers = function() {
-      if($scope.currentSection === 'Mapper') {
+      if($scope.currentExercise === 'Mapper') {
           checkMapperAnswers();
       }
     };

@@ -30,10 +30,21 @@
 
 .exercise,
 .jsavmodelanswer {
+  .jsavoutput {
+    text-align: center;
+    font-size: 1.2em;
+    margin-top: 10px;
+  }
+
   .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair {
     min-width: 40%;
     border: 2px solid #8BBDB2;
     background-color: #42505D;
+
+    .jsav-pair-key:hover,
+    .jsav-pair-values:hover {
+      background-color: #649bb0;
+    }
 
     .jsav-pair-values {
       border-left: 2px solid #8BBDB2;
@@ -53,7 +64,6 @@
     text-align: center;
     background-color: black;
 
-    .jsavscore,
     .jsavoutput.jsavline {
       font-size: 1.2em;
     }
