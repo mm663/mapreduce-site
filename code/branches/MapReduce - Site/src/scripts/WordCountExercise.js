@@ -142,9 +142,21 @@ var WordCountExercise = {
             return answerPairs;
         }
     },
+    Combiner: {
+        run: function() {
+
+        },
+        initialize: function() {
+            //TODO: Use multiple same words in the same mapper.
+            //Maybe use highlighting
+        },
+        modelSolution: function() {
+
+        }
+    },
     ShuffleAndSort: {
         run: function() {
-            Utils.JSAV.createExerciseContainer("Reducer");
+            Utils.JSAV.createExerciseContainer("Shuffle and Sort");
             av = new JSAV("mapReduceExercise");
             av.recorded();
 
