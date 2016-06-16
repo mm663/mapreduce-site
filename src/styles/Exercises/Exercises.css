@@ -38,6 +38,16 @@
   .exercise .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair .jsav-pair-values,
   .jsavmodelanswer .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair .jsav-pair-values {
     border-left: 2px solid #8BBDB2; }
+.exercise .jsavcanvas div.jsavautoresize.jsavcenter .idContainer,
+.jsavmodelanswer .jsavcanvas div.jsavautoresize.jsavcenter .idContainer {
+  color: white;
+  cursor: pointer;
+  background-color: #20454e;
+  border: 2px solid #49717d;
+  border-radius: 5px; }
+  .exercise .jsavcanvas div.jsavautoresize.jsavcenter .idContainer:hover,
+  .jsavmodelanswer .jsavcanvas div.jsavautoresize.jsavcenter .idContainer:hover {
+    background-color: #649bb0; }
 
 .exercise #mapReduceExercise {
   padding-bottom: 30px; }
@@ -63,9 +73,9 @@
   .exercise .jsavcontainer .jsavexercisecontrols input[name="undo"],
   .exercise .jsavcontainer .jsavexercisecontrols input[type="button"]:last-of-type {
     display: none; }
-  .exercise .jsavcontainer .correct {
+  .exercise .jsavcontainer .jsavcanvas div.jsavautoresize.jsavcenter .correct {
     background-color: #32CD32; }
-  .exercise .jsavcontainer .incorrect {
+  .exercise .jsavcontainer .jsavcanvas div.jsavautoresize.jsavcenter .incorrect {
     background-color: #CD0000; }
 .exercise a.jsavsettings {
   margin: 0 auto; }
