@@ -36,18 +36,32 @@
     margin-top: 10px;
   }
 
-  .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair {
-    min-width: 40%;
-    border: 2px solid #8BBDB2;
-    background-color: #42505D;
+  .jsavcanvas div.jsavautoresize.jsavcenter {
+    .jsav-pair {
+      min-width: 40%;
+      border: 2px solid #8BBDB2;
+      background-color: #42505D;
 
-    .jsav-pair-key:hover,
-    .jsav-pair-values:hover {
-      background-color: #649bb0;
+      .jsav-pair-key:hover,
+      .jsav-pair-values:hover {
+        background-color: #649bb0;
+      }
+
+      .jsav-pair-values {
+        border-left: 2px solid #8BBDB2;
+      }
     }
 
-    .jsav-pair-values {
-      border-left: 2px solid #8BBDB2;
+    .idContainer {
+      color: white;
+      cursor: pointer;
+      background-color: #20454e;
+      border: 2px solid #49717d;
+      border-radius: 5px;
+
+      &:hover {
+        background-color: #649bb0;
+      }
     }
   }
 }
@@ -94,12 +108,14 @@
       }
     }
 
-    .correct {
-      background-color: #32CD32;
-    }
+    .jsavcanvas div.jsavautoresize.jsavcenter {
+      .correct {
+        background-color: #32CD32;
+      }
 
-    .incorrect {
-      background-color: #CD0000;
+      .incorrect {
+        background-color: #CD0000;
+      }
     }
   }
 
