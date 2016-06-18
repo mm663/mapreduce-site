@@ -52,6 +52,10 @@
       }
     }
 
+    .jsav-pair-highlight {
+      background-color: #4597a4;
+    }
+
     .idContainer {
       color: white;
       cursor: pointer;
@@ -69,6 +73,13 @@
 .exercise {
   #mapReduceExercise {
     padding-bottom: 30px;
+
+    //In Combiner exercise we require pair highlighting only.
+    &[type="Combiner"] {
+      .jsav-pair:hover{
+        background-color: #649bb0;
+      }
+    }
   }
 
   .jsavcontainer {

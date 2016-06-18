@@ -38,6 +38,9 @@
   .exercise .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair .jsav-pair-values,
   .jsavmodelanswer .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair .jsav-pair-values {
     border-left: 2px solid #8BBDB2; }
+.exercise .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair-highlight,
+.jsavmodelanswer .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair-highlight {
+  background-color: #4597a4; }
 .exercise .jsavcanvas div.jsavautoresize.jsavcenter .idContainer,
 .jsavmodelanswer .jsavcanvas div.jsavautoresize.jsavcenter .idContainer {
   color: white;
@@ -51,6 +54,8 @@
 
 .exercise #mapReduceExercise {
   padding-bottom: 30px; }
+  .exercise #mapReduceExercise[type="Combiner"] .jsav-pair:hover {
+    background-color: #649bb0; }
 .exercise .jsavcontainer {
   margin: 0 20%;
   border: 2px solid #A2BCA3;
