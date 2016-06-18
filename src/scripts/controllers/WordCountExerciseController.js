@@ -1,6 +1,6 @@
 var wordCountExerciseController = function($scope) {
     $scope.pageClass = 'page-exercises-wordcount';
-    $scope.currentExercise = 'Combiner';
+    $scope.currentExercise = 'Mapper';
     $scope.currentExerciseCorrect = false;
 
     $scope.checkAnswers = function() {
@@ -10,6 +10,8 @@ var wordCountExerciseController = function($scope) {
           checkCombinerAnswers();
       } else if ($scope.currentExercise === 'ShuffleAndSort') {
           checkShuffleAndSortAnswers();
+      } else if ($scope.currentExercise === 'Reducer') {
+          checkReducerAnswers();
       }
     };
 
@@ -146,6 +148,36 @@ var wordCountExerciseController = function($scope) {
         }
 
         if(correctCounter === 10) {
+            $scope.toggleCurrentExerciseCorrectness();
+        }
+    };
+
+    var checkReducerAnswers = function() {
+        var correctCounter = 0;
+        var pairValues = document.getElementsByClassName('jsav-pair-values');
+
+        if(pairValues[3].innerHTML === '3') {
+            toggleElementCorrectness(pairValues[3], true);
+            correctCounter++;
+        } else {
+            toggleElementCorrectness(pairValues[3], false);
+        }
+
+        if(pairValues[4].innerHTML === '1') {
+            toggleElementCorrectness(pairValues[4], true);
+            correctCounter++;
+        } else {
+            toggleElementCorrectness(pairValues[4], false);
+        }
+
+        if(pairValues[5].innerHTML === '2') {
+            toggleElementCorrectness(pairValues[5], true);
+            correctCounter++;
+        } else {
+            toggleElementCorrectness(pairValues[5], false);
+        }
+
+        if(correctCounter === 3) {
             $scope.toggleCurrentExerciseCorrectness();
         }
     };
