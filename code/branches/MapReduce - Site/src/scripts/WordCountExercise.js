@@ -7,7 +7,8 @@ var av,
     pairs = [],
     exercise,
     mapperJSAVArray,
-    sasArray,
+    combinerJSAVArray,
+    sasJSAVArray,
     currentPairElement,
     pair1,
     pair2,
@@ -93,7 +94,7 @@ var WordCountExercise = {
             exercise.reset();
         },
         initialize: function() {
-            if (mapperJSAVArray || pair1 || pair2) {
+            if (mapperJSAVArray) {
                 mapperJSAVArray.clear();
                 pairs = [];
                 pair1.clear();
@@ -134,21 +135,21 @@ var WordCountExercise = {
             var pair1 = Utils.JSAV.createKeyValuePair(modeljsav, '-', '-');
             var pair2 = Utils.JSAV.createKeyValuePair(modeljsav, '-', '-');
 
-            WordCountExercise.Common.changeField(pair1.element, 'key', 'hello');
+            WordCountExercise.Common.changeField(pair1.element[0].getElementsByClassName('jsav-pair-key')[0], 'pair', 'hello');
             modeljsav.umsg('Step 1: Change key of first pair to hello');
             modeljsav.step();
             modeljsav.displayInit();
 
-            WordCountExercise.Common.changeField(pair1.element, 'values', '1');
+            WordCountExercise.Common.changeField(pair1.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1');
             modeljsav.umsg('Step 2: Change value of first pair to 1');
             modeljsav.step();
             answerPairs.push(pair1);
 
-            WordCountExercise.Common.changeField(pair2.element, 'key', 'world');
+            WordCountExercise.Common.changeField(pair2.element[0].getElementsByClassName('jsav-pair-key')[0], 'pair', 'world');
             modeljsav.umsg('Step 3: Change key of second pair to world');
             modeljsav.step();
 
-            WordCountExercise.Common.changeField(pair2.element, 'values', '1');
+            WordCountExercise.Common.changeField(pair2.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1');
             modeljsav.umsg('Step 4: Change value of second pair to 1');
             modeljsav.step();
             answerPairs.push(pair2);
@@ -171,18 +172,23 @@ var WordCountExercise = {
             exercise.reset();
         },
         initialize: function() {
-            //TODO: Use multiple same words in the same mapper.
-            //Maybe use highlighting
-
-            if(sasArray) {
-                sasArray.clear();
+            if(combinerJSAVArray) {
+                combinerJSAVArray.clear();
+                pairs = [];
+                pair1.clear();
+                pair2.clear();
+                pair3.clear();
+                pair4.clear();
+                pair5.clear();
+                pair6.clear();
+                pair7.clear();
             }
 
             av.umsg('Considering the below list of words as the input set, while using 1 mapper. <br>' +
                 'Highlight the correct outputs below, produced by the Combiner.');
 
             words = ["hello", "world", "hi", "hello"];
-            sasArray = av.ds.array(words);
+            combinerJSAVArray = av.ds.array(words);
 
             //Creating Pair Choices
             pair1 = Utils.JSAV.createKeyValuePair(av, 'hello', '2');
@@ -200,6 +206,16 @@ var WordCountExercise = {
             pair5.click(WordCountExercise.Common.pairHighlightClickHandler);
             pair6.click(WordCountExercise.Common.pairHighlightClickHandler);
             pair7.click(WordCountExercise.Common.pairHighlightClickHandler);
+
+            pairs.push(pair1);
+            pairs.push(pair2);
+            pairs.push(pair3);
+            pairs.push(pair4);
+            pairs.push(pair5);
+            pairs.push(pair6);
+            pairs.push(pair7);
+
+            return pairs;
         },
         modelSolution: function(modeljsav) {
             var answerPairs = [];
@@ -252,8 +268,8 @@ var WordCountExercise = {
             exercise.reset();
         },
         initialize: function() {
-            if(sasArray || pair1 || pair2) {
-                sasArray.clear();
+            if(sasJSAVArray) {
+                sasJSAVArray.clear();
                 pair1.clear();
                 pair2.clear();
                 pair3.clear();
@@ -267,7 +283,7 @@ var WordCountExercise = {
                 '<br> Input: ');
 
             words = ["hello", "world", "how", "are", "you", "hello"];
-            sasArray = av.ds.array(words);
+            sasJSAVArray = av.ds.array(words);
 
             //Creating Pairs
             pair1 = Utils.JSAV.createKeyValuePair(av, 'hello', '-');
@@ -381,7 +397,79 @@ var WordCountExercise = {
             );
             exercise.reset();
         },
-        initialize: function() {},
-        modelSolution: function(modeljsav) {}
+        initialize: function() {
+            var label = document.getElementsByClassName('jsavlabel')[0];
+
+            if(label) {
+                pair1.clear();
+                pair2.clear();
+                pair3.clear();
+                pair4.clear();
+                pair5.clear();
+                pair6.clear();
+
+                if(label) {
+                    var canvas = document.getElementsByClassName('jsavcanvas')[0];
+                    canvas.removeChild(label);
+                }
+            }
+
+            av.umsg('The below 3 pairs are given as input to the Reducer. <br>' +
+                'Fill in the values of the other 3 empty pairs with the output value of the Reducer. <br><br>' +
+                'Inputs:');
+
+            //Creating Pairs
+            pair1 = Utils.JSAV.createKeyValuePair(av, 'hello', '1, 1, 1');
+            pair2 = Utils.JSAV.createKeyValuePair(av, 'world', '1');
+            pair3 = Utils.JSAV.createKeyValuePair(av, 'how', '1, 1');
+
+            av.label('Outputs: ');
+
+            pair4 = Utils.JSAV.createKeyValuePair(av, 'hello', '-');
+            pair5 = Utils.JSAV.createKeyValuePair(av, 'world', '-');
+            pair6 = Utils.JSAV.createKeyValuePair(av, 'how', '-');
+
+            //Assigning click handlers
+            var pair4Values = $(pair4.element[0].getElementsByClassName('jsav-pair-values')[0]);
+            var pair5Values = $(pair5.element[0].getElementsByClassName('jsav-pair-values')[0]);
+            var pair6Values = $(pair6.element[0].getElementsByClassName('jsav-pair-values')[0]);
+
+            pair4Values.click({type: 'values'}, WordCountExercise.Common.pairClickHandler);
+            pair5Values.click({type: 'values'}, WordCountExercise.Common.pairClickHandler);
+            pair6Values.click({type: 'values'}, WordCountExercise.Common.pairClickHandler);
+
+            pairs.push(pair1);
+            pairs.push(pair2);
+            pairs.push(pair3);
+            pairs.push(pair4);
+            pairs.push(pair5);
+            pairs.push(pair6);
+
+            return pairs;
+        },
+        modelSolution: function(modeljsav) {
+            var answerPairs = [];
+
+            var pair1 = Utils.JSAV.createKeyValuePair(modeljsav, 'hello', '-');
+            var pair2 = Utils.JSAV.createKeyValuePair(modeljsav, 'world', '-');
+            var pair3 = Utils.JSAV.createKeyValuePair(modeljsav, 'how', '-');
+
+            WordCountExercise.Common.changeField(pair1.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '3');
+            modeljsav.umsg('Step 1: Change value of first pair to 3');
+            modeljsav.step();
+            modeljsav.displayInit();
+
+            WordCountExercise.Common.changeField(pair2.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1');
+            modeljsav.umsg('Step 2: Change value of second pair to 1');
+            modeljsav.step();
+            answerPairs.push(pair2);
+
+            WordCountExercise.Common.changeField(pair3.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '2');
+            modeljsav.umsg('Step 3: Change value of third pair to 2');
+            modeljsav.step();
+            answerPairs.push(pair3);
+
+            return answerPairs;
+        }
     }
 };

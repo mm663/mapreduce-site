@@ -7,7 +7,8 @@
     margin-top: 20px;
     background-color: #42505D;
     color: white; }
-  .page-exercises-wordcount #nextExercise {
+  .page-exercises-wordcount #nextExercise,
+  .page-exercises-wordcount #moreExercises {
     background-color: #8BBDB2; }
 
 /*# sourceMappingURL=WordCountExercise.css.map */

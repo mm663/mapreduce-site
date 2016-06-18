@@ -2,14 +2,24 @@
  * Created by matthewmicallef on 09/06/2016.
  */
 
-var mapReduceExerciseController = function($scope) {
+var mapReduceExerciseController = function($scope, $timeout) {
     if($scope.name === "WordCount") {
         if($scope.type === "Mapper") {
-            WordCountExercise.Mapper.run();
+            $timeout(function() {
+                WordCountExercise.Mapper.run();
+            }, 100);
         } else if ($scope.type === 'Combiner') {
-            WordCountExercise.Combiner.run();
+            $timeout(function() {
+                WordCountExercise.Combiner.run();
+            }, 100);
         } else if ($scope.type === "ShuffleAndSort") {
-            WordCountExercise.ShuffleAndSort.run();
+            $timeout(function() {
+                WordCountExercise.ShuffleAndSort.run();
+            }, 100);
+        } else if ($scope.type === "Reducer") {
+            $timeout(function() {
+                WordCountExercise.Reducer.run();
+            }, 100);
         }
     }
 };

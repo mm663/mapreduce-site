@@ -5,12 +5,12 @@
 var mapReduceExerciseDirective = function() {
     return {
         restrict: 'E',
+        replace: true,
+        templateUrl: "templates/MapReduceExercise.html",
+        controller: mapReduceExerciseController,
         scope: {
             name: '@name',
             type: '@type'
-        },
-        replace: true,
-        templateUrl: "templates/MapReduceExercise.html",
-        controller: mapReduceExerciseController
+        }
     };
 };

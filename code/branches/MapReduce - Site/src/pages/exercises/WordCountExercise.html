@@ -50,8 +50,15 @@
 
     <md-button id="nextExercise"
                class="md-raised"
-               ng-if="currentExerciseCorrect"
+               ng-if="currentExerciseCorrect && currentExercise !== 'Reducer'"
                ng-click="loadNextExercise()">
         Next Exercise
+    </md-button>
+
+    <md-button id="moreExercises"
+               class="md-raised"
+               href="#exercises"
+               ng-if="currentExerciseCorrect && currentExercise === 'Reducer'">
+        More Exercises...
     </md-button>
 </div>
