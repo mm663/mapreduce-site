@@ -1,11 +1,13 @@
 var wordCountExerciseController = function($scope) {
     $scope.pageClass = 'page-exercises-wordcount';
-    $scope.currentExercise = 'Mapper';
+    $scope.currentExercise = 'Combiner';
     $scope.currentExerciseCorrect = false;
 
     $scope.checkAnswers = function() {
       if($scope.currentExercise === 'Mapper') {
           checkMapperAnswers();
+      } else if ($scope.currentExercise === 'Combiner') {
+          checkCombinerAnswers();
       } else if ($scope.currentExercise === 'ShuffleAndSort') {
           checkShuffleAndSortAnswers();
       }
@@ -13,7 +15,9 @@ var wordCountExerciseController = function($scope) {
 
     $scope.loadNextExercise = function() {
         if($scope.currentExercise === 'Mapper') {
-            $scope.currentExercise = 'ShuffleAndSort';
+            $scope.currentExercise = 'Combiner';
+        } else if ($scope.currentExercise === 'Combiner') {
+            $scope.currentExercise = 'ShuffleAndSort'
         } else if ($scope.currentExercise === 'ShuffleAndSort') {
             $scope.currentExercise = 'Reducer';
         }
@@ -60,6 +64,54 @@ var wordCountExerciseController = function($scope) {
 
         if(correctCounter === 4) {
             $scope.toggleCurrentExerciseCorrectness();
+        }
+    };
+
+    var checkCombinerAnswers = function() {
+        var correctCounter = 0;
+        var pairs = document.getElementsByClassName('jsav-pair');
+
+        if(pairs[0].className.indexOf('jsav-pair-highlight') !== -1) {
+            toggleElementCorrectness(pairs[0], false);
+            correctCounter--;
+        }
+
+        if(pairs[1].className.indexOf('jsav-pair-highlight') !== -1) {
+            toggleElementCorrectness(pairs[1], true);
+            correctCounter++;
+        }
+
+        if(pairs[2].className.indexOf('jsav-pair-highlight') !== -1) {
+            toggleElementCorrectness(pairs[2], true);
+            correctCounter++;
+        }
+
+        if(pairs[3].className.indexOf('jsav-pair-highlight') !== -1) {
+            toggleElementCorrectness(pairs[3], false);
+            correctCounter--;
+        }
+
+        if(pairs[4].className.indexOf('jsav-pair-highlight') !== -1) {
+            toggleElementCorrectness(pairs[4], false);
+            correctCounter--;
+        }
+
+        if(pairs[5].className.indexOf('jsav-pair-highlight') !== -1) {
+            toggleElementCorrectness(pairs[5], false);
+            correctCounter--;
+        }
+
+        if(pairs[6].className.indexOf('jsav-pair-highlight') !== -1) {
+            toggleElementCorrectness(pairs[6], true);
+            correctCounter++;
+        }
+
+        if(correctCounter === 3) {
+            $scope.toggleCurrentExerciseCorrectness();
+        } else {
+            for (var i = 0; i < pairs.length; i++) {
+                pairs[i].className = pairs[i].className.replace(' jsav-pair-highlight', '');
+            }
         }
     };
 

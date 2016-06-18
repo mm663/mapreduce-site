@@ -14,7 +14,8 @@ var av,
     pair3,
     pair4,
     pair5,
-    pair6;
+    pair6,
+    pair7;
 
 const popUpHTML = "<div style='text-align: center;'>" +
     "<div style='margin-top: 5px'>Insert {{TYPE}}</div>" +
@@ -42,6 +43,19 @@ var WordCountExercise = {
                 dialogClass: 'exerciseDialog',
                 closeText: 'Close'
             });
+        },
+        pairHighlightClickHandler: function(element) {
+            var className = element[0].className;
+
+            if(className.indexOf('incorrect') !== -1) {
+                element[0].className = className.replace(' incorrect', '');
+            }
+
+            if(this.isHighlight()) {
+                this.unhighlight();
+            } else {
+                this.highlight();
+            }
         },
         pairDialogClickHandler: function() {
             var inputValue = document.getElementById('pairValueInput').value;
@@ -144,14 +158,83 @@ var WordCountExercise = {
     },
     Combiner: {
         run: function() {
+            Utils.JSAV.createExerciseContainer("Combiner");
+            av = new JSAV("mapReduceExercise");
+            av.recorded();
 
+            exercise = av.exercise(
+                WordCountExercise.Combiner.modelSolution,
+                WordCountExercise.Combiner.initialize,
+                {},
+                {feedback: "atend"}
+            );
+            exercise.reset();
         },
         initialize: function() {
             //TODO: Use multiple same words in the same mapper.
             //Maybe use highlighting
-        },
-        modelSolution: function() {
 
+            if(sasArray) {
+                sasArray.clear();
+            }
+
+            av.umsg('Considering the below list of words as the input set, while using 1 mapper. <br>' +
+                'Highlight the correct outputs below, produced by the Combiner.');
+
+            words = ["hello", "world", "hi", "hello"];
+            sasArray = av.ds.array(words);
+
+            //Creating Pair Choices
+            pair1 = Utils.JSAV.createKeyValuePair(av, 'hello', '2');
+            pair2 = Utils.JSAV.createKeyValuePair(av, 'world', '1');
+            pair3 = Utils.JSAV.createKeyValuePair(av, 'hello', '1, 1');
+            pair4 = Utils.JSAV.createKeyValuePair(av, 'hi', '1, 1');
+            pair5 = Utils.JSAV.createKeyValuePair(av, 'world, hi', '2');
+            pair6 = Utils.JSAV.createKeyValuePair(av, 'hi, world', '1, 1');
+            pair7 = Utils.JSAV.createKeyValuePair(av, 'hi', '1');
+
+            pair1.click(WordCountExercise.Common.pairHighlightClickHandler);
+            pair2.click(WordCountExercise.Common.pairHighlightClickHandler);
+            pair3.click(WordCountExercise.Common.pairHighlightClickHandler);
+            pair4.click(WordCountExercise.Common.pairHighlightClickHandler);
+            pair5.click(WordCountExercise.Common.pairHighlightClickHandler);
+            pair6.click(WordCountExercise.Common.pairHighlightClickHandler);
+            pair7.click(WordCountExercise.Common.pairHighlightClickHandler);
+        },
+        modelSolution: function(modeljsav) {
+            var answerPairs = [];
+
+            var pair1 = Utils.JSAV.createKeyValuePair(modeljsav, 'hello', '2');
+            var pair2 = Utils.JSAV.createKeyValuePair(modeljsav, 'world', '1');
+            var pair3 = Utils.JSAV.createKeyValuePair(modeljsav, 'hello', '1, 1');
+            var pair4 = Utils.JSAV.createKeyValuePair(modeljsav, 'hi', '1, 1');
+            var pair5 = Utils.JSAV.createKeyValuePair(modeljsav, 'world, hi', '2');
+            var pair6 = Utils.JSAV.createKeyValuePair(modeljsav, 'hi, world', '1, 1');
+            var pair7 = Utils.JSAV.createKeyValuePair(modeljsav, 'hi', '1');
+
+            modeljsav.displayInit();
+
+            pair2.highlight();
+            modeljsav.umsg("Step 1: Highlight pair('world', 1)");
+            modeljsav.step();
+
+            pair3.highlight();
+            modeljsav.umsg("Step 2: Highlight pair('hello', 1, 1)");
+            modeljsav.step();
+
+            pair7.highlight();
+            modeljsav.umsg("Step 3: Highlight pair('hi', 1)");
+            modeljsav.step();
+
+            answerPairs.push(pair1);
+            answerPairs.push(pair2);
+            answerPairs.push(pair3);
+            answerPairs.push(pair4);
+            answerPairs.push(pair5);
+            answerPairs.push(pair6);
+            answerPairs.push(pair7);
+
+            return answerPairs;
         }
     },
     ShuffleAndSort: {
@@ -285,7 +368,19 @@ var WordCountExercise = {
         }
     },
     Reducer: {
-        run: function() {},
+        run: function() {
+            Utils.JSAV.createExerciseContainer("Reducer");
+            av = new JSAV("mapReduceExercise");
+            av.recorded();
+
+            exercise = av.exercise(
+                WordCountExercise.Reducer.modelSolution,
+                WordCountExercise.Reducer.initialize,
+                {},
+                {feedback: "atend"}
+            );
+            exercise.reset();
+        },
         initialize: function() {},
         modelSolution: function(modeljsav) {}
     }
