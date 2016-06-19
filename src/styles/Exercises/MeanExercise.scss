@@ -1,0 +1,19 @@
+.page-exercises-mean {
+  text-align: center;
+
+  &.ng-enter {
+    -webkit-animation: moveFromTop 1s ease both;
+    animation: moveFromTop 1s ease both;
+  }
+
+  #checkExercise {
+    margin-top: 20px;
+    background-color: #42505D;
+    color: white;
+  }
+
+  #nextExercise,
+  #moreExercises {
+    background-color: #8BBDB2;
+  }
+}

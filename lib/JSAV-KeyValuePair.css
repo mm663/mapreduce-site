@@ -1,0 +1,54 @@
+.jsavcanvas {
+  min-width: auto !important; }
+  .jsavcanvas div.jsavautoresize.jsavcenter {
+    padding: 0;
+    text-align: center;
+    width: auto !important; }
+    .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair-section {
+      display: flex;
+      margin-top: 5px; }
+    .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair {
+      min-width: 70%;
+      position: relative;
+      display: inline-block;
+      margin: 0 auto;
+      list-style: none;
+      border: 2px solid black;
+      font-size: 1.1em;
+      font-family: monospace;
+      box-shadow: 2px 2px 5px rgba(120, 120, 120, 0.5); }
+      .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair.jsav-pair-highlight {
+        background-color: green; }
+      .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair .jsav-pair-key,
+      .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair .jsav-pair-values {
+        line-height: 40px;
+        display: inline-block;
+        box-sizing: border-box; }
+      .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair .jsav-pair-key {
+        width: 40%;
+        float: left;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0; }
+        .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair .jsav-pair-key.jsav-pair-key-highlight {
+          background-color: cornflowerblue; }
+      .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair .jsav-pair-values {
+        width: 60%;
+        float: right;
+        border-left: 2px solid black; }
+        .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair .jsav-pair-values.jsav-pair-values-highlight {
+          background-color: yellow; }
+    .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair:hover {
+      background-color: rgba(0, 0, 0, 0.2);
+      cursor: pointer; }
+    .jsavcanvas div.jsavautoresize.jsavcenter .idContainer {
+      width: 100px;
+      height: 44px;
+      color: black;
+      display: inline-block;
+      margin: 0 auto;
+      box-sizing: border-box;
+      border: 2px solid black; }
+
+/*# sourceMappingURL=JSAV-KeyValuePair.css.map */

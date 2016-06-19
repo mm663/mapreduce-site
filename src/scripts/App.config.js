@@ -40,9 +40,15 @@ var appConfig = function($routeProvider) {
             controller: exercisesController
         })
         
-        // route for the exercises page
+        // route for the word count exercise page
         .when('/exercises/wordcount', {
             templateUrl: 'pages/exercises/WordCountExercise.html',
             controller: wordCountExerciseController
+        })
+
+        // route for the mean exercise page
+        .when('/exercises/mean', {
+            templateUrl: 'pages/exercises/MeanExercise.html',
+            controller: meanExerciseController
         })
 };

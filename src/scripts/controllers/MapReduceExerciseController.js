@@ -21,5 +21,11 @@ var mapReduceExerciseController = function($scope, $timeout) {
                 WordCountExercise.Reducer.run();
             }, 100);
         }
+    } else if ($scope.name === "Mean") {
+        if($scope.type === "Mapper") {
+            $timeout(function() {
+                MeanExercise.Mapper.run();
+            }, 100);
+        }
     }
 };

@@ -204,5 +204,81 @@ var Utils = {
 
             return av.ds.keyValuePair(pair);
         }
+    },
+    Exercise: {
+        pairClickHandler: function(element) {
+            currentPairElement = element.toElement;
+
+            var html = Utils.Exercise.getPopupHTML();
+
+            if (element.data.type === 'key') {
+                html = html.replace('{{TYPE}}', 'Key');
+            } else if (element.data.type === 'values') {
+                html = html.replace('{{TYPE}}', 'Values');
+            } else if (element.data.type === 'id') {
+                html = html.replace('{{TYPE}}', 'ID');
+            }
+
+            JSAV.utils.dialog(html, {
+                width: '20%',
+                dialogClass: 'exerciseDialog',
+                closeText: 'Close'
+            });
+        },
+        pairHighlightClickHandler: function(element) {
+            var className = element[0].className;
+
+            if(className.indexOf('incorrect') !== -1) {
+                element[0].className = className.replace(' incorrect', '');
+            }
+
+            if(this.isHighlight()) {
+                this.unhighlight();
+            } else {
+                this.highlight();
+            }
+        },
+        pairDialogClickHandler: function() {
+            var inputValue = document.getElementById('pairValueInput').value;
+
+            if(currentPairElement.innerHTML.indexOf('ID') !== -1) {
+                WordCountExercise.Common.changeField(currentPairElement, 'ID', inputValue);
+            } else {
+                WordCountExercise.Common.changeField(currentPairElement, 'pair', inputValue);
+            }
+
+            exercise.gradeableStep();
+        },
+        changeField: function(currentElement, part, newValue) {
+            if(part === 'pair') {
+                currentElement.innerHTML = newValue;
+            } else if (part === 'ID') {
+                currentElement.innerHTML= currentElement.innerHTML.replace('-', newValue);
+            }
+
+            exercise.gradeableStep();
+        },
+        toggleElementCorrectness: function(element, correct) {
+            if(correct) {
+                if(element.className.indexOf(' incorrect') !== -1) {
+                    element.className = element.className.replace('incorrect', 'correct');
+                } else if(element.className.indexOf(' incorrect') === -1) {
+                    element.className += ' correct';
+                }
+            } else if(!correct) {
+                if(element.className.indexOf(' correct') !== -1) {
+                    element.className = element.className.replace('correct', 'incorrect');
+                } else if(element.className.indexOf(' incorrect') === -1) {
+                    element.className += ' incorrect';
+                }
+            }
+        },
+        getPopupHTML: function() {
+            return "<div style='text-align: center;'>" +
+                "<div style='margin-top: 5px'>Insert {{TYPE}}</div>" +
+                "<input id='pairValueInput' type='text' style='margin-top: 5px'>" +
+                "<button onclick='Utils.Exercise.pairDialogClickHandler()'>OK</button>" +
+                "</div>";
+        }
     }
 };

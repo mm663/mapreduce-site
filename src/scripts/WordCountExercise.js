@@ -18,67 +18,7 @@ var av,
     pair6,
     pair7;
 
-const popUpHTML = "<div style='text-align: center;'>" +
-    "<div style='margin-top: 5px'>Insert {{TYPE}}</div>" +
-    "<input id='pairValueInput' type='text' style='margin-top: 5px'>" +
-    "<button onclick='WordCountExercise.Common.pairDialogClickHandler()'>OK</button>" +
-    "</div>";
-
 var WordCountExercise = {
-    Common: {
-        pairClickHandler: function(element) {
-            currentPairElement = element.toElement;
-
-            var html = popUpHTML;
-
-            if (element.data.type === 'key') {
-                html = html.replace('{{TYPE}}', 'Key');
-            } else if (element.data.type === 'values') {
-                html = html.replace('{{TYPE}}', 'Values');
-            } else if (element.data.type === 'id') {
-                html = html.replace('{{TYPE}}', 'ID');
-            }
-
-            JSAV.utils.dialog(html, {
-                width: '20%',
-                dialogClass: 'exerciseDialog',
-                closeText: 'Close'
-            });
-        },
-        pairHighlightClickHandler: function(element) {
-            var className = element[0].className;
-
-            if(className.indexOf('incorrect') !== -1) {
-                element[0].className = className.replace(' incorrect', '');
-            }
-
-            if(this.isHighlight()) {
-                this.unhighlight();
-            } else {
-                this.highlight();
-            }
-        },
-        pairDialogClickHandler: function() {
-            var inputValue = document.getElementById('pairValueInput').value;
-
-            if(currentPairElement.innerHTML.indexOf('ID') !== -1) {
-                WordCountExercise.Common.changeField(currentPairElement, 'ID', inputValue);
-            } else {
-                WordCountExercise.Common.changeField(currentPairElement, 'pair', inputValue);
-            }
-
-            exercise.gradeableStep();
-        },
-        changeField: function(currentElement, part, newValue) {
-            if(part === 'pair') {
-                currentElement.innerHTML = newValue;
-            } else if (part === 'ID') {
-                currentElement.innerHTML= currentElement.innerHTML.replace('-', newValue);
-            }
-
-            exercise.gradeableStep();
-        }
-    },
     Mapper: {
         run: function() {
             Utils.JSAV.createExerciseContainer("Mapper");
@@ -118,11 +58,11 @@ var WordCountExercise = {
             var pair1Values = $(pair1.element[0].getElementsByClassName('jsav-pair-values')[0]);
             var pair2Values = $(pair2.element[0].getElementsByClassName('jsav-pair-values')[0]);
 
-            pair1Key.click({type: 'key'}, WordCountExercise.Common.pairClickHandler);
-            pair2Key.click({type: 'key'}, WordCountExercise.Common.pairClickHandler);
+            pair1Key.click({type: 'key'}, Utils.Exercise.pairClickHandler);
+            pair2Key.click({type: 'key'}, Utils.Exercise.pairClickHandler);
 
-            pair1Values.click({type: 'values'}, WordCountExercise.Common.pairClickHandler);
-            pair2Values.click({type: 'values'}, WordCountExercise.Common.pairClickHandler);
+            pair1Values.click({type: 'values'}, Utils.Exercise.pairClickHandler);
+            pair2Values.click({type: 'values'}, Utils.Exercise.pairClickHandler);
 
             pairs.push(pair1);
             pairs.push(pair2);
@@ -135,21 +75,21 @@ var WordCountExercise = {
             var pair1 = Utils.JSAV.createKeyValuePair(modeljsav, '-', '-');
             var pair2 = Utils.JSAV.createKeyValuePair(modeljsav, '-', '-');
 
-            WordCountExercise.Common.changeField(pair1.element[0].getElementsByClassName('jsav-pair-key')[0], 'pair', 'hello');
+            Utils.Exercise.changeField(pair1.element[0].getElementsByClassName('jsav-pair-key')[0], 'pair', 'hello');
             modeljsav.umsg('Step 1: Change key of first pair to hello');
             modeljsav.step();
             modeljsav.displayInit();
 
-            WordCountExercise.Common.changeField(pair1.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1');
+            Utils.Exercise.changeField(pair1.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1');
             modeljsav.umsg('Step 2: Change value of first pair to 1');
             modeljsav.step();
             answerPairs.push(pair1);
 
-            WordCountExercise.Common.changeField(pair2.element[0].getElementsByClassName('jsav-pair-key')[0], 'pair', 'world');
+            Utils.Exercise.changeField(pair2.element[0].getElementsByClassName('jsav-pair-key')[0], 'pair', 'world');
             modeljsav.umsg('Step 3: Change key of second pair to world');
             modeljsav.step();
 
-            WordCountExercise.Common.changeField(pair2.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1');
+            Utils.Exercise.changeField(pair2.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1');
             modeljsav.umsg('Step 4: Change value of second pair to 1');
             modeljsav.step();
             answerPairs.push(pair2);
@@ -199,13 +139,13 @@ var WordCountExercise = {
             pair6 = Utils.JSAV.createKeyValuePair(av, 'hi, world', '1, 1');
             pair7 = Utils.JSAV.createKeyValuePair(av, 'hi', '1');
 
-            pair1.click(WordCountExercise.Common.pairHighlightClickHandler);
-            pair2.click(WordCountExercise.Common.pairHighlightClickHandler);
-            pair3.click(WordCountExercise.Common.pairHighlightClickHandler);
-            pair4.click(WordCountExercise.Common.pairHighlightClickHandler);
-            pair5.click(WordCountExercise.Common.pairHighlightClickHandler);
-            pair6.click(WordCountExercise.Common.pairHighlightClickHandler);
-            pair7.click(WordCountExercise.Common.pairHighlightClickHandler);
+            pair1.click(Utils.Exercise.pairHighlightClickHandler);
+            pair2.click(Utils.Exercise.pairHighlightClickHandler);
+            pair3.click(Utils.Exercise.pairHighlightClickHandler);
+            pair4.click(Utils.Exercise.pairHighlightClickHandler);
+            pair5.click(Utils.Exercise.pairHighlightClickHandler);
+            pair6.click(Utils.Exercise.pairHighlightClickHandler);
+            pair7.click(Utils.Exercise.pairHighlightClickHandler);
 
             pairs.push(pair1);
             pairs.push(pair2);
@@ -306,11 +246,11 @@ var WordCountExercise = {
             var pair4Values = $(pair4.element[0].getElementsByClassName('jsav-pair-values')[0]);
             var pair5Values = $(pair5.element[0].getElementsByClassName('jsav-pair-values')[0]);
 
-            pair1Values.click({type: 'values'}, WordCountExercise.Common.pairClickHandler);
-            pair2Values.click({type: 'values'}, WordCountExercise.Common.pairClickHandler);
-            pair3Values.click({type: 'values'}, WordCountExercise.Common.pairClickHandler);
-            pair4Values.click({type: 'values'}, WordCountExercise.Common.pairClickHandler);
-            pair5Values.click({type: 'values'}, WordCountExercise.Common.pairClickHandler);
+            pair1Values.click({type: 'values'}, Utils.Exercise.pairClickHandler);
+            pair2Values.click({type: 'values'}, Utils.Exercise.pairClickHandler);
+            pair3Values.click({type: 'values'}, Utils.Exercise.pairClickHandler);
+            pair4Values.click({type: 'values'}, Utils.Exercise.pairClickHandler);
+            pair5Values.click({type: 'values'}, Utils.Exercise.pairClickHandler);
 
             var pair1SortID = $(pair1.element[0].getElementsByClassName('idContainer')[0]);
             var pair2SortID = $(pair2.element[0].getElementsByClassName('idContainer')[0]);
@@ -318,11 +258,11 @@ var WordCountExercise = {
             var pair4SortID = $(pair4.element[0].getElementsByClassName('idContainer')[0]);
             var pair5SortID = $(pair5.element[0].getElementsByClassName('idContainer')[0]);
 
-            pair1SortID.click({type: 'id'}, WordCountExercise.Common.pairClickHandler);
-            pair2SortID.click({type: 'id'}, WordCountExercise.Common.pairClickHandler);
-            pair3SortID.click({type: 'id'}, WordCountExercise.Common.pairClickHandler);
-            pair4SortID.click({type: 'id'}, WordCountExercise.Common.pairClickHandler);
-            pair5SortID.click({type: 'id'}, WordCountExercise.Common.pairClickHandler);
+            pair1SortID.click({type: 'id'}, Utils.Exercise.pairClickHandler);
+            pair2SortID.click({type: 'id'}, Utils.Exercise.pairClickHandler);
+            pair3SortID.click({type: 'id'}, Utils.Exercise.pairClickHandler);
+            pair4SortID.click({type: 'id'}, Utils.Exercise.pairClickHandler);
+            pair5SortID.click({type: 'id'}, Utils.Exercise.pairClickHandler);
 
             pairs.push(pair1);
             pairs.push(pair2);
@@ -349,33 +289,33 @@ var WordCountExercise = {
             pair4.addIDContainer("Sort", '-');
             pair5.addIDContainer("Sort", '-');
 
-            WordCountExercise.Common.changeField(pair1.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1, 1');
-            WordCountExercise.Common.changeField(pair1.element[0].getElementsByClassName('SortId')[0], 'ID', '2');
+            Utils.Exercise.changeField(pair1.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1, 1');
+            Utils.Exercise.changeField(pair1.element[0].getElementsByClassName('SortId')[0], 'ID', '2');
             modeljsav.umsg('Step 1: Change values of first pair to 1, 1 and its sort order to 2.');
             modeljsav.step();
             answerPairs.push(pair1);
             modeljsav.displayInit();
 
-            WordCountExercise.Common.changeField(pair2.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1');
-            WordCountExercise.Common.changeField(pair2.element[0].getElementsByClassName('SortId')[0], 'ID', '4');
+            Utils.Exercise.changeField(pair2.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1');
+            Utils.Exercise.changeField(pair2.element[0].getElementsByClassName('SortId')[0], 'ID', '4');
             modeljsav.umsg('Step 2: Change values of second pair to 1 and its sort order to 4');
             modeljsav.step();
             answerPairs.push(pair2);
 
-            WordCountExercise.Common.changeField(pair3.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1');
-            WordCountExercise.Common.changeField(pair3.element[0].getElementsByClassName('SortId')[0], 'ID', '3');
+            Utils.Exercise.changeField(pair3.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1');
+            Utils.Exercise.changeField(pair3.element[0].getElementsByClassName('SortId')[0], 'ID', '3');
             modeljsav.umsg('Step 3: Change values of third pair to 1 and its sort order to 3');
             modeljsav.step();
             answerPairs.push(pair3);
 
-            WordCountExercise.Common.changeField(pair4.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1');
-            WordCountExercise.Common.changeField(pair4.element[0].getElementsByClassName('SortId')[0], 'ID', '1');
+            Utils.Exercise.changeField(pair4.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1');
+            Utils.Exercise.changeField(pair4.element[0].getElementsByClassName('SortId')[0], 'ID', '1');
             modeljsav.umsg('Step 4: Change values of fourth pair to 1 and its sort order to 1');
             modeljsav.step();
             answerPairs.push(pair4);
 
-            WordCountExercise.Common.changeField(pair5.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1');
-            WordCountExercise.Common.changeField(pair5.element[0].getElementsByClassName('SortId')[0], 'ID', '5');
+            Utils.Exercise.changeField(pair5.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1');
+            Utils.Exercise.changeField(pair5.element[0].getElementsByClassName('SortId')[0], 'ID', '5');
             modeljsav.umsg('Step 5: Change values of fifth pair to 1 and its sort order to 5');
             modeljsav.step();
             answerPairs.push(pair5);
@@ -434,9 +374,9 @@ var WordCountExercise = {
             var pair5Values = $(pair5.element[0].getElementsByClassName('jsav-pair-values')[0]);
             var pair6Values = $(pair6.element[0].getElementsByClassName('jsav-pair-values')[0]);
 
-            pair4Values.click({type: 'values'}, WordCountExercise.Common.pairClickHandler);
-            pair5Values.click({type: 'values'}, WordCountExercise.Common.pairClickHandler);
-            pair6Values.click({type: 'values'}, WordCountExercise.Common.pairClickHandler);
+            pair4Values.click({type: 'values'}, Utils.Exercise.pairClickHandler);
+            pair5Values.click({type: 'values'}, Utils.Exercise.pairClickHandler);
+            pair6Values.click({type: 'values'}, Utils.Exercise.pairClickHandler);
 
             pairs.push(pair1);
             pairs.push(pair2);
@@ -454,17 +394,17 @@ var WordCountExercise = {
             var pair2 = Utils.JSAV.createKeyValuePair(modeljsav, 'world', '-');
             var pair3 = Utils.JSAV.createKeyValuePair(modeljsav, 'how', '-');
 
-            WordCountExercise.Common.changeField(pair1.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '3');
+            Utils.Exercise.changeField(pair1.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '3');
             modeljsav.umsg('Step 1: Change value of first pair to 3');
             modeljsav.step();
             modeljsav.displayInit();
 
-            WordCountExercise.Common.changeField(pair2.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1');
+            Utils.Exercise.changeField(pair2.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1');
             modeljsav.umsg('Step 2: Change value of second pair to 1');
             modeljsav.step();
             answerPairs.push(pair2);
 
-            WordCountExercise.Common.changeField(pair3.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '2');
+            Utils.Exercise.changeField(pair3.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '2');
             modeljsav.umsg('Step 3: Change value of third pair to 2');
             modeljsav.step();
             answerPairs.push(pair3);
