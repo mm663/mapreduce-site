@@ -242,9 +242,9 @@ var Utils = {
             var inputValue = document.getElementById('pairValueInput').value;
 
             if(currentPairElement.innerHTML.indexOf('ID') !== -1) {
-                WordCountExercise.Common.changeField(currentPairElement, 'ID', inputValue);
+                Utils.Exercise.changeField(currentPairElement, 'ID', inputValue);
             } else {
-                WordCountExercise.Common.changeField(currentPairElement, 'pair', inputValue);
+                Utils.Exercise.changeField(currentPairElement, 'pair', inputValue);
             }
 
             exercise.gradeableStep();
