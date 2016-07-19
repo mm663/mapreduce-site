@@ -51,4 +51,10 @@ var appConfig = function($routeProvider) {
             templateUrl: 'pages/exercises/MeanExercise.html',
             controller: meanExerciseController
         })
+
+        // route for the relative frequencies exercise page
+        .when('/exercises/relativefrequencies', {
+            templateUrl: 'pages/exercises/RelativeFrequenciesExercise.html',
+            controller: relativeFrequenciesExerciseController
+        })
 };

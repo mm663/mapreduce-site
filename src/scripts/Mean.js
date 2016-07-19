@@ -59,7 +59,7 @@ var Mean = {
         }
     },
     processInput: function(input, mapperCount) {
-        if(input && mapperCount > 0) {
+        if(input && mapperCount >= -1) {
             var mapperShare = Math.floor(input.length / mapperCount),
             mapperId = 0,
             mapperInput = input;
@@ -93,28 +93,25 @@ var Mean = {
         for(var i = 0; i < mapperCount; i++) {
             mapperId = Utils.JSAV.createHtmlElement("Mapper", i + 1);
             av = new JSAV(mapperId);
-
-            //Step 1
-            av.label("This mapper runs on a single node.");
             av.label("Mapper Input:");
-
             arr = [];
             arrCounter = 0;
-
             for (var j = 0; j < input.length; j++) {
                 if(input[j].mapperId === i + 1) {
                     arr[arrCounter] = "K: " + input[j].key + " V: " + input[j].values;
                     arrCounter++;
                 }
             }
-
             jsavArr = av.ds.array(arr);
+
+            //Step 1
+            av.label("This mapper runs on a single node.");
             jsavArr.layout();
             av.displayInit();
             av.step();
 
             //Step 2
-            av.label("For every pair, a new key-value pair is created.");
+            av.label("For every input, a new key-value pair is created.");
             code = av.code([
                 "Emit(term t, pair(r, 1)"
             ]);
@@ -175,7 +172,9 @@ var Mean = {
                 " Emit (string t, pair (s, c))"
             ]);
 
-            av.label("A combiner performs local aggregation.");
+            //Step 2
+            av.label("Combiner first aggregates sum and count of values of pairs with the same key," +
+                "and places them in a new pair.");
 
             for (var j = 0; j < filteredInput.length; j++) {
                 code.setCurrentLine(1);
@@ -230,6 +229,7 @@ var Mean = {
                 }
             }
 
+            //Step 3
             for (var j = 0; j < pairs.length; j++) {
                 code.setCurrentLine(4);
                 av.step();
@@ -276,14 +276,18 @@ var Mean = {
 
             //Step 1
             if(!animationService.isUsingCombiners()) {
-                av.label("Every partitioner receives data from every mapper. Using data from Mapper " + (i + 1));
+                av.label("Every partitioner receives data from every mapper, since combiners are not being used. " +
+                    "This partitioner receives data from Mapper " + (i + 1));
             } else {
-                av.label("Every partitioner receives data from every combiner. Using data from Combiner " + (i + 1));
+                av.label("Every partitioner receives data from every combiner." +
+                    "This partitioner receives data from Combiner " + (i + 1));
             }
 
             av.step();
 
-            av.label("Key is hashed and the reducer identity obtained.");
+            av.label("Every key is hashed and the reducer identity of each pair obtained. " +
+                "The hash function ensures that pairs with the same key are assigned the same reducer.");
+
             for(var j = 0; j < partitionJSAVPairs.length; j++) {
                 if(partitionJSAVPairs[j].mapperId === (i + 1)) {
                     var pair = Utils.JSAV.createKeyValuePair(av, partitionJSAVPairs[j]._pairData.key, partitionJSAVPairs[j]._pairData.values);
@@ -329,11 +333,12 @@ var Mean = {
         var av = new JSAV(sasId);
 
         //Step 1
-        av.label("The shuffle and sort gathers all mapper outputs.");
+        av.label("The shuffle and sort gathers all partitioner outputs.");
         av.step();
 
         //Step 2
-        av.label("The values from all pairs are all placed together in one pair.");
+        av.label("The values from all pairs across all nodes are all sorted and combined together in one pair, " +
+            "before they are sent to the reducers.");
 
         for(var i = 0; i < sasArray.length; i++) {
             var pair = Utils.JSAV.createKeyValuePair(av, sasArray[i].key, sasArray[i].values);
@@ -372,7 +377,8 @@ var Mean = {
             ]);
 
             //Step 1
-            av.label("Reducer receives data and combines pairs to calculate average.");
+            av.label("Reducer receives its assigned data and divides the sums by the counts of each pair," +
+                "to obtain a mean for that particular key.");
             av.step();
 
             for(j = 0; j < pairCount; j++) {

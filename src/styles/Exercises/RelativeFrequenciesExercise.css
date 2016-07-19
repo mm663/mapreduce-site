@@ -1,0 +1,20 @@
+.page-exercises-relativefrequencies {
+  text-align: center;
+  height: 1020px;
+  background-color: #8f4e5a !important; }
+  .page-exercises-relativefrequencies.ng-enter {
+    -webkit-animation: moveFromTop 1s ease both;
+    animation: moveFromTop 1s ease both; }
+  .page-exercises-relativefrequencies #mapReduceExercise {
+    background-color: #9a838a; }
+    .page-exercises-relativefrequencies #mapReduceExercise[name="RelativeFrequencies"][type="Reducer"] .jsav-pair:hover {
+      background-color: #649bb0; }
+  .page-exercises-relativefrequencies #checkExercise {
+    margin-top: 20px;
+    background-color: #42505D;
+    color: white; }
+  .page-exercises-relativefrequencies #nextExercise,
+  .page-exercises-relativefrequencies #moreExercises {
+    background-color: #8BBDB2; }
+
+/*# sourceMappingURL=RelativeFrequenciesExercise.css.map */

@@ -2,6 +2,7 @@
  * Created by matthewmicallef on 21/02/2016.
  */
 
+var $ = jQuery;
 const JSAV_COMPONENT_TEMPLATE =
     "<div id='{{ID}}'>" +
         "<h4>{{NAME}}</h4>" +
@@ -10,6 +11,8 @@ const JSAV_COMPONENT_TEMPLATE =
         "<p class='jsavoutput jsavline'></p>" +
         "<div class='jsavcanvas'></div>" +
     "</div>";
+
+var currentPairElement;
 
 var Utils = {
     MapReduce: {
@@ -224,12 +227,14 @@ var Utils = {
                 dialogClass: 'exerciseDialog',
                 closeText: 'Close'
             });
+
+            document.getElementById('pairValueInput').focus();
         },
         pairHighlightClickHandler: function(element) {
             var className = element[0].className;
 
             if(className.indexOf('incorrect') !== -1) {
-                element[0].className = className.replace(' incorrect', '');
+                $(element[0]).toggleClass('incorrect');
             }
 
             if(this.isHighlight()) {
@@ -241,6 +246,10 @@ var Utils = {
         pairDialogClickHandler: function() {
             var inputValue = document.getElementById('pairValueInput').value;
 
+            if(!inputValue) {
+                inputValue = '-';
+            }
+
             if(currentPairElement.innerHTML.indexOf('ID') !== -1) {
                 Utils.Exercise.changeField(currentPairElement, 'ID', inputValue);
             } else {
@@ -248,28 +257,37 @@ var Utils = {
             }
 
             exercise.gradeableStep();
+
+            //Closing popup
+            document.getElementsByClassName('jsavrow')[0].click();
         },
         changeField: function(currentElement, part, newValue) {
             if(part === 'pair') {
                 currentElement.innerHTML = newValue;
             } else if (part === 'ID') {
-                currentElement.innerHTML= currentElement.innerHTML.replace('-', newValue);
+                currentElement.innerHTML = currentElement.innerHTML.replace('-', newValue);
             }
 
             exercise.gradeableStep();
         },
         toggleElementCorrectness: function(element, correct) {
             if(correct) {
-                if(element.className.indexOf(' incorrect') !== -1) {
-                    element.className = element.className.replace('incorrect', 'correct');
+                if(element.className.indexOf(' incorrect') > -1) {
+                    $(element).toggleClass('incorrect');
+                    $(element).toggleClass('correct');
                 } else if(element.className.indexOf(' incorrect') === -1) {
-                    element.className += ' correct';
+                    if(element.className.indexOf(' correct') === -1) {
+                        $(element).toggleClass('correct');
+                    }
                 }
             } else if(!correct) {
-                if(element.className.indexOf(' correct') !== -1) {
-                    element.className = element.className.replace('correct', 'incorrect');
+                if(element.className.indexOf(' correct') > -1) {
+                    $(element).toggleClass('correct');
+                    $(element).toggleClass('incorrect');
                 } else if(element.className.indexOf(' incorrect') === -1) {
-                    element.className += ' incorrect';
+                    if(element.className.indexOf(' incorrect') === -1) {
+                        $(element).toggleClass('incorrect');
+                    }
                 }
             }
         },

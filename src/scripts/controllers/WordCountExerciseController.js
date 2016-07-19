@@ -1,7 +1,16 @@
 var wordCountExerciseController = function($scope) {
+    $ = jQuery;
+
+    const MAPPER_TOTAL_SCORE = 4;
+    const COMBINER_TOTAL_SCORE = 3;
+    const SHUFFLE_AND_SORT_TOTAL_SCORE = 2;
+    const REDUCER_TOTAL_SCORE = 3;
+
     $scope.pageClass = 'page-exercises-wordcount';
     $scope.currentExercise = 'Mapper';
     $scope.currentExerciseCorrect = false;
+    $scope.totalScore = MAPPER_TOTAL_SCORE;
+    $scope.currentScore = 0;
 
     $scope.checkAnswers = function() {
       if($scope.currentExercise === 'Mapper') {
@@ -18,17 +27,36 @@ var wordCountExerciseController = function($scope) {
     $scope.loadNextExercise = function() {
         if($scope.currentExercise === 'Mapper') {
             $scope.currentExercise = 'Combiner';
+            $scope.totalScore = COMBINER_TOTAL_SCORE;
         } else if ($scope.currentExercise === 'Combiner') {
-            $scope.currentExercise = 'ShuffleAndSort'
+            $scope.currentExercise = 'ShuffleAndSort';
+            $scope.totalScore = SHUFFLE_AND_SORT_TOTAL_SCORE;
         } else if ($scope.currentExercise === 'ShuffleAndSort') {
             $scope.currentExercise = 'Reducer';
+            $scope.totalScore = REDUCER_TOTAL_SCORE;
         }
 
         $scope.currentExerciseCorrect = false;
+        $scope.currentScore = 0;
     };
 
     $scope.toggleCurrentExerciseCorrectness = function() {
         $scope.currentExerciseCorrect = !$scope.currentExerciseCorrect;
+    };
+
+    $scope.loadExercise = function(exerciseName) {
+        if(exerciseName === 'Mapper') {
+            $scope.totalScore = MAPPER_TOTAL_SCORE;
+        } else if (exerciseName === 'Combiner') {
+            $scope.totalScore = COMBINER_TOTAL_SCORE;
+        } else if (exerciseName === 'ShuffleAndSort') {
+            $scope.totalScore = SHUFFLE_AND_SORT_TOTAL_SCORE;
+        } else if (exerciseName === 'Reducer') {
+            $scope.totalScore = REDUCER_TOTAL_SCORE;
+        }
+
+        $scope.currentExercise =  exerciseName;
+        $scope.currentScore = 0;
     };
 
     var checkMapperAnswers = function() {
@@ -64,92 +92,84 @@ var wordCountExerciseController = function($scope) {
             Utils.Exercise.toggleElementCorrectness(pairValues[1], false);
         }
 
-        if(correctCounter === 4) {
+        if(correctCounter === MAPPER_TOTAL_SCORE) {
             $scope.toggleCurrentExerciseCorrectness();
         }
+
+        $scope.currentScore = correctCounter;
     };
 
     var checkCombinerAnswers = function() {
         var correctCounter = 0;
         var pairs = document.getElementsByClassName('jsav-pair');
 
-        if(pairs[0].className.indexOf('jsav-pair-highlight') !== -1) {
-            Utils.Exercise.toggleElementCorrectness(pairs[0], false);
-            correctCounter--;
+        if($(pairs[0]).hasClass('jsav-pair-highlight')) {
+            Utils.Exercise.toggleElementCorrectness(pairs[0], true);
+            correctCounter++;
         }
 
-        if(pairs[1].className.indexOf('jsav-pair-highlight') !== -1) {
+        if($(pairs[1]).hasClass('jsav-pair-highlight')) {
             Utils.Exercise.toggleElementCorrectness(pairs[1], true);
             correctCounter++;
         }
 
-        if(pairs[2].className.indexOf('jsav-pair-highlight') !== -1) {
-            Utils.Exercise.toggleElementCorrectness(pairs[2], true);
-            correctCounter++;
+        if($(pairs[2]).hasClass('jsav-pair-highlight')) {
+            Utils.Exercise.toggleElementCorrectness(pairs[2], false);
         }
 
-        if(pairs[3].className.indexOf('jsav-pair-highlight') !== -1) {
+        if($(pairs[3]).hasClass('jsav-pair-highlight')) {
             Utils.Exercise.toggleElementCorrectness(pairs[3], false);
-            correctCounter--;
         }
 
-        if(pairs[4].className.indexOf('jsav-pair-highlight') !== -1) {
+        if($(pairs[4]).hasClass('jsav-pair-highlight')) {
             Utils.Exercise.toggleElementCorrectness(pairs[4], false);
-            correctCounter--;
         }
 
-        if(pairs[5].className.indexOf('jsav-pair-highlight') !== -1) {
+        if($(pairs[5]).hasClass('jsav-pair-highlight')) {
             Utils.Exercise.toggleElementCorrectness(pairs[5], false);
-            correctCounter--;
         }
 
-        if(pairs[6].className.indexOf('jsav-pair-highlight') !== -1) {
+        if($(pairs[6]).hasClass('jsav-pair-highlight')) {
             Utils.Exercise.toggleElementCorrectness(pairs[6], true);
             correctCounter++;
         }
 
-        if(correctCounter === 3) {
+        if(correctCounter === COMBINER_TOTAL_SCORE) {
             $scope.toggleCurrentExerciseCorrectness();
         } else {
             for (var i = 0; i < pairs.length; i++) {
-                pairs[i].className = pairs[i].className.replace(' jsav-pair-highlight', '');
+                if($(pairs[i]).hasClass('incorrect')) {
+                    $(pairs[i]).toggleClass('jsav-pair-highlight');
+                }
             }
         }
+
+        $scope.currentScore = correctCounter;
     };
 
     var checkShuffleAndSortAnswers = function() {
         var correctCounter = 0;
         var pairValues = document.getElementsByClassName('jsav-pair-values');
-        var pairIDContainers = document.getElementsByClassName('idContainer');
 
-        for(var i = 0; i < pairValues.length; i++) {
-            if(i !== 0 && pairValues[i].innerHTML === '1') {
-                Utils.Exercise.toggleElementCorrectness(pairValues[i], true);
-                correctCounter++;
-            } else if(i === 0 &&
-                (pairValues[i].innerHTML === '1, 1' ||
-                 pairValues[i].innerHTML === '1,1')) {
-                Utils.Exercise.toggleElementCorrectness(pairValues[i], true);
-                correctCounter++;
-            } else {
-                Utils.Exercise.toggleElementCorrectness(pairValues[i], false);
-            }
+        if(pairValues[3].innerHTML === '3') {
+            Utils.Exercise.toggleElementCorrectness(pairValues[3], true);
+            correctCounter++;
+        } else {
+            Utils.Exercise.toggleElementCorrectness(pairValues[3], false);
         }
 
-        var sortAnswerArray = [2, 4, 3, 1, 5];
-
-        for(var i = 0; i < pairIDContainers.length; i++) {
-            if(pairIDContainers[i].innerHTML.indexOf(sortAnswerArray[i]) !== -1) {
-                Utils.Exercise.toggleElementCorrectness(pairIDContainers[i], true);
-                correctCounter++;
-            } else {
-                Utils.Exercise.toggleElementCorrectness(pairIDContainers[i], false);
-            }
+        if(pairValues[4].innerHTML === '2') {
+            Utils.Exercise.toggleElementCorrectness(pairValues[4], true);
+            correctCounter++;
+        } else {
+            Utils.Exercise.toggleElementCorrectness(pairValues[4], false);
         }
 
-        if(correctCounter === 10) {
+        if(correctCounter === SHUFFLE_AND_SORT_TOTAL_SCORE) {
             $scope.toggleCurrentExerciseCorrectness();
         }
+
+        $scope.currentScore = correctCounter;
     };
 
     var checkReducerAnswers = function() {
@@ -177,9 +197,11 @@ var wordCountExerciseController = function($scope) {
             Utils.Exercise.toggleElementCorrectness(pairValues[5], false);
         }
 
-        if(correctCounter === 3) {
+        if(correctCounter === REDUCER_TOTAL_SCORE) {
             $scope.toggleCurrentExerciseCorrectness();
         }
+
+        $scope.currentScore = correctCounter;
     };
 };
 

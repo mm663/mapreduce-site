@@ -18,6 +18,26 @@
         </g>
     </svg>
 
+    <div class="btn-group">
+        <button type="button"
+                class="btn btn-default dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+            Choose Exercise <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a ng-click="loadExercise('Mapper')">Mapper</a></li>
+            <li><a ng-click="loadExercise('Combiner')">Combiner</a></li>
+            <li><a ng-click="loadExercise('ShuffleAndSort')">ShuffleAndSort</a></li>
+            <li><a ng-click="loadExercise('Reducer')">Reducer</a></li>
+        </ul>
+    </div>
+
+    <br>
+    <div class="label label-warning exerciseScore">
+        Score: {{currentScore}}/{{totalScore}}
+    </div>
+
     <map-reduce-exercise
             name="WordCount"
             type="Mapper"

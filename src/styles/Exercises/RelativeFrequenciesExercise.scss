@@ -1,7 +1,7 @@
-.page-exercises-mean {
+.page-exercises-relativefrequencies {
   text-align: center;
-  height: 935px;
-  background-color: #4a0004 !important;
+  height: 1020px;
+  background-color: #8f4e5a !important;
 
   &.ng-enter {
     -webkit-animation: moveFromTop 1s ease both;
@@ -9,11 +9,10 @@
   }
 
   #mapReduceExercise {
-    background-color: #8f4e5a;
+    background-color: #9a838a;
 
     //In WordCount Combiner exercise we require pair highlighting only.
-    &[name="Mean"] {
-      &[type="Mapper"],
+    &[name="RelativeFrequencies"] {
       &[type="Reducer"] {
         .jsav-pair:hover{
           background-color: #649bb0;

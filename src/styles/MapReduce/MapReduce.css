@@ -19,6 +19,8 @@
     margin: 0;
     outline: none;
     cursor: pointer; }
+    .mapReduceSection .processTitle .closed {
+      display: none; }
   .mapReduceSection .processTitle:hover {
     background-color: lightslategrey; }
   .mapReduceSection .animationContainer {

@@ -63,7 +63,7 @@ var WordCount = {
         }
     },
     processInput: function(input, mapperPerLine, mapperCount) {
-        if(input && mapperCount > 0) {
+        if(input && mapperCount >= -1) {
             var newLineSplit = Utils.MapReduce.trimAllEntries(input.split("\n"));
             
             if(mapperPerLine) {
@@ -109,17 +109,17 @@ var WordCount = {
             mapperId = Utils.JSAV.createHtmlElement("Mapper", i + 1);
             av = new JSAV(mapperId);
             wordsInChunk = input[i].split(" ");
+            av.label("Mapper Input:");
             initMapArray = av.ds.array(wordsInChunk);
 
             //Step 1
             av.label("This mapper runs on a single node.");
-            av.label("Mapper Input:");
             initMapArray.layout();
             av.displayInit();
             av.step();
 
             //Step 2
-            av.label("For every word, a new key-value pair is created.");
+            av.label("For every input word, a new key-value pair is created.");
             code = av.code([
                 "for all term t in input",
                 " Emit(term t, count 1)"
@@ -166,12 +166,15 @@ var WordCount = {
             processedKeys = [];
             pairs = [];
 
+            //Step 1
             filteredInput = input.filter(function(mapJSAVPairs) {
                 return mapJSAVPairs.mapperId == (i + 1);
             });
 
-            //Step 1
-            av.label("A combiner performs local aggregation.");
+            av.label("Combiners perform local aggregation on the mapper output, thus, " +
+                "adding values for the same keys together.");
+
+            av.label("Combiner Output:");
             for (var j = 0; j < filteredInput.length; j++) {
                 if((processedKeys.length > 0) && (processedKeys.indexOf(filteredInput[j]._pairData.key) > -1)) {
                     for(var k = 0; k < pairs.length; k++) {
@@ -214,7 +217,9 @@ var WordCount = {
         partitionJSAVPairs = input;
         var key = "",
             hashedString = "",
-            reducerId = -1;
+            reducerId = -1,
+            partitionerId,
+            av;
 
         for(var i = 0; i < partitionJSAVPairs.length; i++) {
             key = partitionJSAVPairs[i]._pairData.key;
@@ -223,23 +228,24 @@ var WordCount = {
             partitionJSAVPairs[i].reducerId = reducerId;
         }
 
-        var partitionerId,
-            av;
-
         for(var i = 0; i < numberOfMappers; i++) {
             partitionerId = Utils.JSAV.createHtmlElement("Partitioner", i + 1);
             av = new JSAV(partitionerId);
 
             //Step 1
             if(!animationService.isUsingCombiners()) {
-                av.label("Every partitioner receives data from every mapper. Using data from Mapper " + (i + 1));
+                av.label("Every partitioner receives data from every mapper, because combiners are not being used." +
+                    "This partitioner receives data from Mapper " + (i + 1) + ".");
             } else {
-                av.label("Every partitioner receives data from every combiner. Using data from Combiner " + (i + 1));
+                av.label("Every partitioner receives data from every combiner." +
+                    "This partitioner receives data from Combiner " + (i + 1) + ".");
             }
 
             av.step();
 
-            av.label("Key is hashed and the reducer identity obtained.");
+            av.label("Every key is hashed and the reducer identity of each pair obtained. " +
+                "The hash function ensures that pairs with the same key are assigned the same reducer.");
+
             for(var j = 0; j < partitionJSAVPairs.length; j++) {
                 if(partitionJSAVPairs[j].mapperId === (i + 1)) {
                     var pair = Utils.JSAV.createKeyValuePair(av, partitionJSAVPairs[j]._pairData.key, partitionJSAVPairs[j]._pairData.values);
@@ -287,11 +293,13 @@ var WordCount = {
         var av = new JSAV(sasId);
 
         //Step 1
-        av.label("The shuffle and sort gathers all mapper outputs.");
+        av.label("The shuffle and sort gathers all partitioner outputs.");
         av.step();
 
         //Step 2
-        av.label("The values from all pairs are all placed together in one pair.");
+        av.label("The values from all pairs across all nodes are all sorted and combined together in one pair, " +
+            "before they are sent to the reducers.");
+
         for(var i = 0; i < sasArray.length; i++) {
             pair = Utils.JSAV.createKeyValuePair(av, sasArray[i].key, sasArray[i].values);
             pair.mapperId = sasArray[i].mapperId;
@@ -327,7 +335,7 @@ var WordCount = {
             ]);
 
             //Step 1
-            av.label("Reducer receives data and counts the values to obtain a total word count.");
+            av.label("The reducer receives its share of data and counts the values to obtain a total word count.");
             av.step();
 
             for(j = 0; j < pairCount; j++) {

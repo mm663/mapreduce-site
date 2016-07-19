@@ -22,6 +22,7 @@ app.controller('exercisesController', exercisesController);
 app.controller('mapReduceExerciseController', mapReduceExerciseController);
 app.controller('wordCountExerciseController', wordCountExerciseController);
 app.controller('meanExerciseController', meanExerciseController);
+app.controller('relativeFrequenciesExerciseController', relativeFrequenciesExerciseController);
 
 //directives
 app.directive('animationMenu', animationMenuDirective);

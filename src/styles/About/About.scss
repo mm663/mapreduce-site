@@ -1,6 +1,8 @@
 .page-about {
   height: 100%;
   color: black;
+  background: url('http://global-alliance.com.my/travel/wp-content/uploads/2014/09/bg-blur.jpg') no-repeat center center fixed;
+  background-size: cover;
 
   &.ng-enter {
     -webkit-animation: moveFromLeft 1s ease both;
@@ -16,7 +18,7 @@
   }
 
   p {
-    font-family: "Minion Pro";
+    font-family: "Minion Pro", "Times";
     font-size: 1.5em;
   }
 
@@ -33,26 +35,6 @@
       cursor: pointer;
       font-weight: bold;
       outline: none;
-    }
-
-    &#about-mapreduce {
-      background-color: #F1625C;
-    }
-
-    &#about-thesite {
-      background-color: #F5B659;
-    }
-
-    &#about-wordcount {
-      background-color: #F2ECBC;
-    }
-
-    &#about-mean {
-      background-color: #8BBDB2;
-    }
-
-    &#about-rf {
-      background-color: #9a838a;
     }
   }
 }

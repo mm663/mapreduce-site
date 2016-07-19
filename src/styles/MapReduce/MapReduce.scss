@@ -23,6 +23,10 @@
     margin: 0;
     outline: none;
     cursor: pointer;
+
+    .closed {
+      display: none;
+    }
   }
 
   .processTitle:hover {

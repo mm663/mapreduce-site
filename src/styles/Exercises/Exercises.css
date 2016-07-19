@@ -17,8 +17,18 @@
 .exercises {
   height: 100%;
   background-color: #8BBDB2;
-  color: #F2ECBC;
-  overflow: scroll; }
+  color: #6F1F00;
+  background: url("http://www.vdgh.ca/wp-content/uploads/2015/09/Silver-Blur-Background.jpg") no-repeat center center fixed;
+  background-size: cover; }
+
+.exercise .btn-group {
+  margin-bottom: 20px; }
+  .exercise .btn-group .dropdown-menu > li > a {
+    cursor: pointer; }
+.exercise .exerciseScore {
+  display: inline-block;
+  margin-bottom: 20px;
+  font-size: 1.4em; }
 
 .exercise .jsavoutput,
 .jsavmodelanswer .jsavoutput {
@@ -27,7 +37,7 @@
   margin-top: 10px; }
 .exercise .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair,
 .jsavmodelanswer .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair {
-  min-width: 40%;
+  min-width: 50%;
   border: 2px solid #8BBDB2;
   background-color: #42505D; }
   .exercise .jsavcanvas div.jsavautoresize.jsavcenter .jsav-pair .jsav-pair-key:hover,
@@ -54,11 +64,9 @@
 
 .exercise #mapReduceExercise {
   padding-bottom: 30px; }
-  .exercise #mapReduceExercise[type="Combiner"] .jsav-pair:hover {
-    background-color: #649bb0; }
 .exercise .jsavcontainer {
   margin: 0 20%;
-  border: 2px solid #A2BCA3;
+  border: 2px solid #ffffff;
   border-radius: 20px;
   text-align: center;
   background-color: black; }

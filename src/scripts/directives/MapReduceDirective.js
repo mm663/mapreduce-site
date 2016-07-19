@@ -12,6 +12,7 @@ var mapReduceDirective = function() {
         link: function(scope) {
             scope.toggleMapReduceSection = function(sectionName) {
                 var element = document.getElementById(sectionName);
+
                 if(element) {
                     if(element.clientHeight === 0) {
                         $(element).slideDown("slow");
@@ -22,6 +23,13 @@ var mapReduceDirective = function() {
                         }
                     } else {
                         $(element).slideUp("slow");
+                    }
+
+                    if(element.innerHTML) {
+                        var menuRightIcon = element.previousElementSibling.getElementsByClassName("glyphicon-menu-right");
+                        $(menuRightIcon).toggleClass("closed");
+                        var menuDownIcon = element.previousElementSibling.getElementsByClassName("glyphicon-menu-down");
+                        $(menuDownIcon).toggleClass("closed");
                     }
                 }
             };

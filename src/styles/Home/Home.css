@@ -8,6 +8,8 @@
   .page-home.ng-enter {
     -webkit-animation: moveFromRight 1s ease both;
     animation: moveFromRight 1s ease both; }
+  .page-home h1 {
+    padding: 30px 0; }
   .page-home p {
     width: 100%;
     text-align: center; }
@@ -15,7 +17,8 @@
 .home {
   height: 100%;
   background-color: #FFB266;
-  color: #a55400;
-  overflow: scroll; }
+  color: #6F1F00;
+  background: url("https://getflywheel.com/wp-content/uploads/2015/08/free-blurred-backgrounds.jpg") no-repeat center center fixed;
+  background-size: cover; }
 
 /*# sourceMappingURL=Home.css.map */

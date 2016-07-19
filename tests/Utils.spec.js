@@ -181,6 +181,24 @@ describe('Utils', function() {
     });
     
     describe('JSAV', function() {
+        describe('createExerciseContainer', function() {
+            var container;
+
+            beforeEach(function() {
+                container = document.createElement('div');
+                spyOn(document, 'getElementById').and.returnValue(container);
+            });
+
+            it('should create an exercise container', function() {
+                Utils.JSAV.createExerciseContainer('Exercise');
+                expect(container.innerHTML).toContain('Exercise');
+                expect(container.innerHTML).toContain('Settings');
+                expect(container.innerHTML).toContain('jsavexercisecontrols');
+                expect(container.innerHTML).toContain('jsavscore');
+                expect(container.innerHTML).toContain('jsavoutput');
+            });
+        });
+
         describe('createHtmlElement', function() {
             var container;
             
@@ -194,14 +212,14 @@ describe('Utils', function() {
                     spyOn(document, 'getElementById').and.returnValue(container);
                 }); 
                 
-                it('should return append a new child to the container', function() {
+                it('should append a new child to the container', function() {
                     Utils.JSAV.createHtmlElement('Mapper', 1);
-                    expect(container.innerHTML).toContain("Mapper1");
-                    expect(container.innerHTML).toContain("settings");
-                    expect(container.innerHTML).toContain("jsavcontrols");
-                    expect(container.innerHTML).toContain("jsavcounter");
-                    expect(container.innerHTML).toContain("jsavoutput");
-                    expect(container.innerHTML).toContain("jsavcanvas");
+                    expect(container.innerHTML).toContain('Mapper1');
+                    expect(container.innerHTML).toContain('settings');
+                    expect(container.innerHTML).toContain('jsavcontrols');
+                    expect(container.innerHTML).toContain('jsavcounter');
+                    expect(container.innerHTML).toContain('jsavoutput');
+                    expect(container.innerHTML).toContain('jsavcanvas');
                 });
                 
                 it('should return the id of the new container', function() {
@@ -296,6 +314,68 @@ describe('Utils', function() {
                     result = Utils.JSAV.createHtmlElement('Partitioner', 1);
                     expect(result).toEqual('Partitioner1');
                 });
+            });
+        });
+    });
+
+    describe('Exercise', function() {
+        describe('toggleElementCorrectness', function() {
+            var element;
+
+            beforeEach(function() {
+                element = document.createElement('div');
+            });
+
+            describe('if state is correct', function() {
+                describe('if element has class incorrect', function() {
+                    beforeEach(function() {
+                        element.className = ' incorrect';
+                        Utils.Exercise.toggleElementCorrectness(element, true);
+                    });
+
+                    it('should change the class of the element to correct', function() {
+                        expect(element.className).toContain('correct');
+                    });
+                });
+
+                describe('if element does not have class incorrect', function() {
+                    beforeEach(function() {
+                        Utils.Exercise.toggleElementCorrectness(element, true);
+                    });
+
+                    it('should change the class of the element to correct', function() {
+                        expect(element.className).toContain('correct');
+                    });
+                });
+            });
+
+            describe('if state is incorrect', function() {
+                describe('if element has class correct', function() {
+                    beforeEach(function() {
+                        element.className = ' correct';
+                        Utils.Exercise.toggleElementCorrectness(element, false);
+                    });
+
+                    it('should change the class of the element to correct', function() {
+                        expect(element.className).toContain('incorrect');
+                    });
+                });
+
+                describe('if element does not have class correct', function() {
+                    beforeEach(function() {
+                        Utils.Exercise.toggleElementCorrectness(element, false);
+                    });
+
+                    it('should change the class of the element to correct', function() {
+                        expect(element.className).toContain('incorrect');
+                    });
+                });
+            });
+        });
+
+        describe('getPopupHTML', function() {
+            it('should return the html of the popup', function() {
+                expect(Utils.Exercise.getPopupHTML).not.toThrowError();
             });
         });
     });

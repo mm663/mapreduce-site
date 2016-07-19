@@ -82,12 +82,16 @@ describe('MenuController', function() {
             Utils.MapReduce = {
                 reset: function() { }
             };
-
             spyOn(Utils.MapReduce, 'reset');
 
             var element = document.createElement('test');
             element.value = 2;
+
+            var menuIcon = document.createElement('div');
+            menuIcon.className = 'glyphicon-menu-right glyphicon-menu-down';
+
             spyOn(document, 'getElementById').and.returnValue(element);
+            spyOn(document, 'getElementsByClassName').and.returnValue([menuIcon, menuIcon]);
 
             $timeout = _$timeout_;
         }));

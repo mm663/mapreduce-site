@@ -74,5 +74,12 @@ var menuController = function($scope, animationService, $timeout) {
             }
 
         }, 100);
+
+        var menuRightIcon = document.getElementsByClassName("glyphicon-menu-right");
+        var menuDownIcon = document.getElementsByClassName("glyphicon-menu-down");
+        for(var i = 0; i < menuRightIcon.length; i++) {
+            $(menuRightIcon[i]).toggleClass("closed");
+            $(menuDownIcon[i]).toggleClass("closed");
+        }
     };
 };

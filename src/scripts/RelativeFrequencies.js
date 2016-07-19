@@ -62,7 +62,7 @@ var RelativeFrequencies = {
         }
     },
     processInput: function(input, mapperPerLine, mapperCount) {
-        if(input && mapperCount > 0) {
+        if(input && mapperCount >= -1) {
             var newLineSplit = Utils.MapReduce.trimAllEntries(input.split("\n"));
 
             if(mapperPerLine) {
@@ -116,12 +116,6 @@ var RelativeFrequencies = {
         for(var i = 0; i < input.length; i++) {
             mapperId = Utils.JSAV.createHtmlElement("Mapper", i + 1);
             av = new JSAV(mapperId);
-
-            av.label("This mapper runs on a single node.");
-
-            //Step 1
-            av.label("Initial mapper Input:");
-
             wordsInChunk = Utils.MapReduce.trimAllEntries(input[i].split("\n"));
             wordsArr = [];
 
@@ -132,13 +126,17 @@ var RelativeFrequencies = {
                 }
             }
 
+            av.label("Mapper Input:");
             initMapArray = av.ds.array(wordsArr);
+
+            //Step 1
+            av.label("This mapper runs on a single node.");
             initMapArray.layout();
             av.displayInit();
             av.step();
 
             //Step 2
-            av.label("For every word, two key-value pairs are created.");
+            av.label("For every input word, two key-value pairs are created.");
             av.label("One as (word, *) and the other for co-occurrence:");
 
             code = av.code ([
@@ -250,12 +248,15 @@ var RelativeFrequencies = {
             processedKeys = [];
             pairs = [];
 
+            //Step 1
             filteredInput = input.filter(function(mapJSAVPairs) {
                 return mapJSAVPairs.mapperId == (i + 1);
             });
 
-            //Step 1
-            av.label("A combiner performs local aggregation.");
+            av.label("Combiners perform local aggregation on the mapper output, thus, " +
+                "adding values for the same keys together.");
+
+            av.label("Combiner Output:");
             for(var j = 0; j < filteredInput.length; j++) {
                 index = RelativeFrequencies.arrayContainsPair(processedKeys, filteredInput[j]._pairData.key);
                 if((processedKeys.length > 0) && index > -1) {
@@ -309,14 +310,18 @@ var RelativeFrequencies = {
 
             //Step 1
             if(!animationService.isUsingCombiners()) {
-                av.label("Every partitioner receives data from every mapper. Using data from Mapper " + (i + 1));
+                av.label("Every partitioner receives data from every mapper, because combiners are not being used." +
+                    "This partitioner receives data from Mapper " + (i + 1) + ".");
             } else {
-                av.label("Every partitioner receives data from every combiner. Using data from Combiner " + (i + 1));
+                av.label("Every partitioner receives data from every combiner." +
+                    "This partitioner receives data from Combiner " + (i + 1) + ".");
             }
 
             av.step();
 
-            av.label("Key is hashed and the reducer identity obtained.");
+            av.label("Every key is hashed and the reducer identity of each pair obtained. " +
+                "The hash function ensures that pairs with the same key are assigned the same reducer.");
+
             for(var j = 0; j < partitionJSAVPairs.length; j++) {
                 if(partitionJSAVPairs[j].mapperId === (i + 1)) {
                     var pair = Utils.JSAV.createKeyValuePair(av, partitionJSAVPairs[j]._pairData.key, partitionJSAVPairs[j]._pairData.values);
@@ -363,11 +368,13 @@ var RelativeFrequencies = {
         var av = new JSAV(sasId);
 
         //Step 1
-        av.label("The shuffle and sort gathers all mapper outputs.");
+        av.label("The shuffle and sort gathers all partitioner outputs.");
         av.step();
 
         //Step 2
-        av.label("The values from all pairs are all placed together in one pair.");
+        av.label("The values from all pairs across all nodes are all sorted and combined together in one pair, " +
+            "before they are sent to the reducers.");
+
         for(var i = 0; i < sasArray.length; i++) {
             pair = Utils.JSAV.createKeyValuePair(av, sasArray[i].key, sasArray[i].values);
             pair.mapperId = sasArray[i].mapperId;
@@ -415,7 +422,7 @@ var RelativeFrequencies = {
             ]);
 
             //Step 1
-            av.label("Reducer receives data and calculates marginal to obtain RF.");
+            av.label("Reducer receives data and calculates marginal to obtain relative frequency.");
             av.step();
 
             var marginal = 0;

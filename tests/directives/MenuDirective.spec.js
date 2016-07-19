@@ -16,11 +16,11 @@ describe('MenuDirective', function () {
 
         scope = $rootScope.$new();
         compile = $compile;
+        element = compile('<animation-menu></animation-menu>')(scope);
+        scope.$digest();
     }));
 
     it('must render a non-empty template', function () {
-        element = compile('<animation-menu></animation-menu>')(scope);
-        scope.$digest();
         expect(element.html()).not.toEqual('');
     });
 

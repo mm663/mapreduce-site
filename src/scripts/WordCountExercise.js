@@ -8,8 +8,6 @@ var av,
     exercise,
     mapperJSAVArray,
     combinerJSAVArray,
-    sasJSAVArray,
-    currentPairElement,
     pair1,
     pair2,
     pair3,
@@ -41,20 +39,21 @@ var WordCountExercise = {
                 pair2.clear();
             }
 
-            av.umsg("Step 1: Consider the below list of words as input to the Mapper." +
-                "</br> Click on the empty pairs below and change their values accordingly, to reflect those created by the mapper?");
+            av.umsg("Consider the below list of words as input to the Mapper." +
+                "<br> Click on the empty pairs below and change their values accordingly, to reflect those created by the mapper.");
 
             words = ["hello", "world"];
             mapperJSAVArray = av.ds.array(words);
 
+            //Creating Output Pairs
             pair1 = Utils.JSAV.createKeyValuePair(av, '-', '-');
             pair2 = Utils.JSAV.createKeyValuePair(av, '-', '-');
 
-            //Get Pair Key Elements
+            //Getting Pair Key Elements
             var pair1Key = $(pair1.element[0].getElementsByClassName('jsav-pair-key')[0]);
             var pair2Key = $(pair2.element[0].getElementsByClassName('jsav-pair-key')[0]);
 
-            //Get Pair Values Elements
+            //Getting Pair Values Elements
             var pair1Values = $(pair1.element[0].getElementsByClassName('jsav-pair-values')[0]);
             var pair2Values = $(pair2.element[0].getElementsByClassName('jsav-pair-values')[0]);
 
@@ -139,6 +138,7 @@ var WordCountExercise = {
             pair6 = Utils.JSAV.createKeyValuePair(av, 'hi, world', '1, 1');
             pair7 = Utils.JSAV.createKeyValuePair(av, 'hi', '1');
 
+            //Assigning click handlers
             pair1.click(Utils.Exercise.pairHighlightClickHandler);
             pair2.click(Utils.Exercise.pairHighlightClickHandler);
             pair3.click(Utils.Exercise.pairHighlightClickHandler);
@@ -170,11 +170,11 @@ var WordCountExercise = {
 
             modeljsav.displayInit();
 
-            pair2.highlight();
+            pair1.highlight();
             modeljsav.umsg("Step 1: Highlight pair('world', 1)");
             modeljsav.step();
 
-            pair3.highlight();
+            pair2.highlight();
             modeljsav.umsg("Step 2: Highlight pair('hello', 1, 1)");
             modeljsav.step();
 
@@ -208,61 +208,50 @@ var WordCountExercise = {
             exercise.reset();
         },
         initialize: function() {
-            if(sasJSAVArray) {
-                sasJSAVArray.clear();
+            var label = document.getElementsByClassName('jsavlabel')[0];
+
+            if(label) {
                 pair1.clear();
                 pair2.clear();
                 pair3.clear();
                 pair4.clear();
                 pair5.clear();
-                pair6.clear();
+
+                if(label) {
+                    var canvas = document.getElementsByClassName('jsavcanvas')[0];
+                    canvas.removeChild(label);
+                }
             }
 
-            av.umsg('Assume that the input set has now changed and is the one below. <br>' +
-                'Specify the pair values and sort order IDs of the given pairs. <br>' +
+            av.umsg('Assume that the input set is coming from two mappers as shown below. <br>' +
+                'Specify the pair values as produced by the shuffle and sort phase.<br>' +
                 '<br> Input: ');
 
-            words = ["hello", "world", "how", "are", "you", "hello"];
-            sasJSAVArray = av.ds.array(words);
+            //Creating Input Pairs - Mapper 1
+            pair1 = Utils.JSAV.createKeyValuePair(av, 'hello', '1');
+            pair2 = Utils.JSAV.createKeyValuePair(av, 'world', '1');
 
-            //Creating Pairs
-            pair1 = Utils.JSAV.createKeyValuePair(av, 'hello', '-');
-            pair2 = Utils.JSAV.createKeyValuePair(av, 'world', '-');
-            pair3 = Utils.JSAV.createKeyValuePair(av, 'how', '-');
-            pair4 = Utils.JSAV.createKeyValuePair(av, 'are', '-');
-            pair5 = Utils.JSAV.createKeyValuePair(av, 'you', '-');
+            //Creating Input Pairs - Mapper 2
+            pair3 = Utils.JSAV.createKeyValuePair(av, 'hello', '2');
 
-            //Adding ID Containers for Sort ID
-            pair1.addIDContainer("Sort", '-');
-            pair2.addIDContainer("Sort", '-');
-            pair3.addIDContainer("Sort", '-');
-            pair4.addIDContainer("Sort", '-');
-            pair5.addIDContainer("Sort", '-');
+            //Adding ID Containers for Mapper ID
+            pair1.addIDContainer("Mapper", '1');
+            pair2.addIDContainer("Mapper", '1');
+            pair3.addIDContainer("Mapper", '2');
+
+            av.label('Outputs:');
+
+            //Creating Output Pairs
+            pair4 = Utils.JSAV.createKeyValuePair(av, 'hello', '-');
+            pair5 = Utils.JSAV.createKeyValuePair(av, 'world', '-');
 
             //Get Pair Values Elements
-            var pair1Values = $(pair1.element[0].getElementsByClassName('jsav-pair-values')[0]);
-            var pair2Values = $(pair2.element[0].getElementsByClassName('jsav-pair-values')[0]);
-            var pair3Values = $(pair3.element[0].getElementsByClassName('jsav-pair-values')[0]);
             var pair4Values = $(pair4.element[0].getElementsByClassName('jsav-pair-values')[0]);
             var pair5Values = $(pair5.element[0].getElementsByClassName('jsav-pair-values')[0]);
 
-            pair1Values.click({type: 'values'}, Utils.Exercise.pairClickHandler);
-            pair2Values.click({type: 'values'}, Utils.Exercise.pairClickHandler);
-            pair3Values.click({type: 'values'}, Utils.Exercise.pairClickHandler);
+            //Assigning click handlers
             pair4Values.click({type: 'values'}, Utils.Exercise.pairClickHandler);
             pair5Values.click({type: 'values'}, Utils.Exercise.pairClickHandler);
-
-            var pair1SortID = $(pair1.element[0].getElementsByClassName('idContainer')[0]);
-            var pair2SortID = $(pair2.element[0].getElementsByClassName('idContainer')[0]);
-            var pair3SortID = $(pair3.element[0].getElementsByClassName('idContainer')[0]);
-            var pair4SortID = $(pair4.element[0].getElementsByClassName('idContainer')[0]);
-            var pair5SortID = $(pair5.element[0].getElementsByClassName('idContainer')[0]);
-
-            pair1SortID.click({type: 'id'}, Utils.Exercise.pairClickHandler);
-            pair2SortID.click({type: 'id'}, Utils.Exercise.pairClickHandler);
-            pair3SortID.click({type: 'id'}, Utils.Exercise.pairClickHandler);
-            pair4SortID.click({type: 'id'}, Utils.Exercise.pairClickHandler);
-            pair5SortID.click({type: 'id'}, Utils.Exercise.pairClickHandler);
 
             pairs.push(pair1);
             pairs.push(pair2);
@@ -278,47 +267,17 @@ var WordCountExercise = {
             //Creating pairs.
             var pair1 = Utils.JSAV.createKeyValuePair(modeljsav, 'hello', '-');
             var pair2 = Utils.JSAV.createKeyValuePair(modeljsav, 'world', '-');
-            var pair3 = Utils.JSAV.createKeyValuePair(modeljsav, 'how', '-');
-            var pair4 = Utils.JSAV.createKeyValuePair(modeljsav, 'are', '-');
-            var pair5 = Utils.JSAV.createKeyValuePair(modeljsav, 'you', '-');
 
-            //Adding ID Containers for Sort ID
-            pair1.addIDContainer("Sort", '-');
-            pair2.addIDContainer("Sort", '-');
-            pair3.addIDContainer("Sort", '-');
-            pair4.addIDContainer("Sort", '-');
-            pair5.addIDContainer("Sort", '-');
-
-            Utils.Exercise.changeField(pair1.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1, 1');
-            Utils.Exercise.changeField(pair1.element[0].getElementsByClassName('SortId')[0], 'ID', '2');
-            modeljsav.umsg('Step 1: Change values of first pair to 1, 1 and its sort order to 2.');
+            Utils.Exercise.changeField(pair1.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '3');
+            modeljsav.umsg('Step 1: Change values of first pair to 3.');
             modeljsav.step();
             answerPairs.push(pair1);
             modeljsav.displayInit();
 
-            Utils.Exercise.changeField(pair2.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1');
-            Utils.Exercise.changeField(pair2.element[0].getElementsByClassName('SortId')[0], 'ID', '4');
-            modeljsav.umsg('Step 2: Change values of second pair to 1 and its sort order to 4');
+            Utils.Exercise.changeField(pair2.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '2');
+            modeljsav.umsg('Step 2: Change values of second pair to 2.');
             modeljsav.step();
             answerPairs.push(pair2);
-
-            Utils.Exercise.changeField(pair3.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1');
-            Utils.Exercise.changeField(pair3.element[0].getElementsByClassName('SortId')[0], 'ID', '3');
-            modeljsav.umsg('Step 3: Change values of third pair to 1 and its sort order to 3');
-            modeljsav.step();
-            answerPairs.push(pair3);
-
-            Utils.Exercise.changeField(pair4.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1');
-            Utils.Exercise.changeField(pair4.element[0].getElementsByClassName('SortId')[0], 'ID', '1');
-            modeljsav.umsg('Step 4: Change values of fourth pair to 1 and its sort order to 1');
-            modeljsav.step();
-            answerPairs.push(pair4);
-
-            Utils.Exercise.changeField(pair5.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1');
-            Utils.Exercise.changeField(pair5.element[0].getElementsByClassName('SortId')[0], 'ID', '5');
-            modeljsav.umsg('Step 5: Change values of fifth pair to 1 and its sort order to 5');
-            modeljsav.step();
-            answerPairs.push(pair5);
 
             return answerPairs;
         }
@@ -363,7 +322,7 @@ var WordCountExercise = {
             pair2 = Utils.JSAV.createKeyValuePair(av, 'world', '1');
             pair3 = Utils.JSAV.createKeyValuePair(av, 'how', '1, 1');
 
-            av.label('Outputs: ');
+            av.label('Outputs:');
 
             pair4 = Utils.JSAV.createKeyValuePair(av, 'hello', '-');
             pair5 = Utils.JSAV.createKeyValuePair(av, 'world', '-');
@@ -397,6 +356,7 @@ var WordCountExercise = {
             Utils.Exercise.changeField(pair1.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '3');
             modeljsav.umsg('Step 1: Change value of first pair to 3');
             modeljsav.step();
+            answerPairs.push(pair1);
             modeljsav.displayInit();
 
             Utils.Exercise.changeField(pair2.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1');
