@@ -30,4 +30,14 @@ describe('WordCountController', function() {
     it('calls animationService.reset()', function() {
         expect(animationService.reset).toHaveBeenCalled();
     });
+
+    describe('if addSampleData() is called', function() {
+        it('should assign the sample data to the userInput scope variable', function() {
+            scope.addSampleData();
+            expect(scope.userInput).toEqual("Hello World this is a sample test data " +
+                "for the word count MapReduce animation that contains " +
+                "multiple instances of the same word \n" +
+                "this is a new line with a line break");
+        });
+    });
 });

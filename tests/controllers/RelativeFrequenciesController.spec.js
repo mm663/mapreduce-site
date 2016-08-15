@@ -30,4 +30,11 @@ describe('RelativeFrequenciesController', function() {
     it('calls animationService.reset()', function() {
         expect(animationService.reset).toHaveBeenCalled();
     });
+
+    describe('if addSampleData() is called', function() {
+        it('should assign the sample data to the userInput scope variable', function() {
+            scope.addSampleData();
+            expect(scope.userInput).toEqual('hi world hello');
+        });
+    });
 });

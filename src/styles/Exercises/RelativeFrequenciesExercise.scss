@@ -1,7 +1,7 @@
 .page-exercises-relativefrequencies {
   text-align: center;
-  height: 1020px;
-  background-color: #8f4e5a !important;
+  height: 1080px;
+  background-color: #bf6b4e !important;
 
   &.ng-enter {
     -webkit-animation: moveFromTop 1s ease both;
@@ -19,16 +19,5 @@
         }
       }
     }
-  }
-
-  #checkExercise {
-    margin-top: 20px;
-    background-color: #42505D;
-    color: white;
-  }
-
-  #nextExercise,
-  #moreExercises {
-    background-color: #8BBDB2;
   }
 }

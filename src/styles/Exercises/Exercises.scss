@@ -89,6 +89,27 @@
 }
 
 .exercise {
+  //Mode
+  md-radio-group {
+    outline: none;
+
+    span {
+      display: block;
+    }
+
+    md-radio-button {
+      display: inline;
+
+      &:first-of-type {
+        margin-right: 20px;
+      }
+
+      .md-off {
+        border-color: rgb(87, 87, 88) !important;
+      }
+    }
+  }
+
   #mapReduceExercise {
     padding-bottom: 30px;
   }
@@ -113,6 +134,8 @@
     }
 
     .jsavexercisecontrols {
+      color: black;
+
       input[name="reset"] {
         margin-left: 25px;
         border-top-left-radius: 7px;
@@ -139,13 +162,48 @@
         background-color: #CD0000;
       }
     }
+
+    input[disabled] {
+      opacity: 0.5;
+    }
   }
 
   a.jsavsettings {
     margin: 0 auto;
   }
+
+  .jsavvalue {
+    padding: 5px;
+  }
+
+  #checkExercise {
+    margin-top: 20px;
+    background-color: #42505D;
+    color: white;
+  }
+
+  #nextExercise,
+  #previousExercise,
+  #finishExercise,
+  #moreExercises {
+    margin-top: 20px;
+    background-color: #8BBDB2;
+  }
+
+  .result {
+    color: #f0ad4e;
+    font-weight: bold;
+  }
 }
 
 .exerciseDialog {
   color: black;
+}
+
+#moreExercises {
+  display: inline-flex;
+}
+
+p.md-title {
+  color: white;
 }

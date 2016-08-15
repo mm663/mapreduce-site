@@ -1,6 +1,6 @@
 .page-exercises-mean {
   text-align: center;
-  height: 935px;
+  height: 980px;
   background-color: #4a0004 !important;
 
   &.ng-enter {
@@ -20,16 +20,5 @@
         }
       }
     }
-  }
-
-  #checkExercise {
-    margin-top: 20px;
-    background-color: #42505D;
-    color: white;
-  }
-
-  #nextExercise,
-  #moreExercises {
-    background-color: #8BBDB2;
   }
 }

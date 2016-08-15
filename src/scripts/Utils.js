@@ -88,7 +88,11 @@ var Utils = {
         },
         trimAllEntries: function(arrayToTrim) {
             if(arrayToTrim) {
-                for(var i = 0; i < arrayToTrim.length; i++) {
+                for(var i = 0; i < arrayToTrim.length; i++)
+                {
+                    //Removing all characters.
+                    arrayToTrim[i] = arrayToTrim[i].replace(/[^a-zA-z ]/g, "").replace("  ", " ");
+                    //Trimming.
                     arrayToTrim[i] = arrayToTrim[i].trim();
                 }
 
@@ -210,7 +214,7 @@ var Utils = {
     },
     Exercise: {
         pairClickHandler: function(element) {
-            currentPairElement = element.toElement;
+            currentPairElement = element.target;
 
             var html = Utils.Exercise.getPopupHTML();
 
@@ -291,12 +295,57 @@ var Utils = {
                 }
             }
         },
+        reset: function(array) {
+            for(var i = 0; i < array.length; i++) {
+                $(array[i]).removeClass('incorrect');
+                $(array[i]).removeClass('correct');
+
+                if((array[i].className.indexOf('jsav-pair-key') > -1) ||
+                    (array[i].className.indexOf('jsav-pair-values') > -1)) {
+                    array[i].innerHTML = '-';
+                }
+            }
+        },
+        resetByClassName: function(className) {
+            var elements = document.getElementsByClassName(className);
+            if(elements) {
+                Utils.Exercise.reset(elements);
+            }
+        },
         getPopupHTML: function() {
             return "<div style='text-align: center;'>" +
                 "<div style='margin-top: 5px'>Insert {{TYPE}}</div>" +
                 "<input id='pairValueInput' type='text' style='margin-top: 5px'>" +
                 "<button onclick='Utils.Exercise.pairDialogClickHandler()'>OK</button>" +
                 "</div>";
+        },
+        togglePointerEvents: function(pairType, pointerType) {
+            var elements;
+
+            if(pairType === 0) {
+                //Pair
+                elements = document.getElementsByClassName("jsav-pair");
+            } else if (pairType === 1) {
+                //Keys
+                elements = document.getElementsByClassName("jsav-pair-key");
+            } else if (pairType === 2) {
+                //Values
+                elements = document.getElementsByClassName("jsav-pair-values");
+            } else if (pairType === 3) {
+                //ID Containers
+                elements = document.getElementsByClassName("idContainer");
+            }
+
+            if(elements) {
+                for(var i = 0; i < elements.length; i++) {
+                    elements[i].style.pointerEvents = pointerType;
+                }
+            }
+        },
+        toggleModelAnswer: function($timeout, isDisabled) {
+            $timeout(function() {
+                document.getElementsByName('answer')[0].disabled = isDisabled;
+            }, 10);
         }
     }
 };

@@ -22,6 +22,7 @@
       outline: none; }
 
 #addToListBtn,
+#addSampleDataBtn
 #removeFromListBtn {
   background-color: cornflowerblue;
   margin-top: 15px; }

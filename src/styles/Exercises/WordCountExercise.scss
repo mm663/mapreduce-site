@@ -1,6 +1,6 @@
 .page-exercises-wordcount {
   text-align: center;
-  height: 935px;
+  height: 1000px;
   background-color: #0d1e37 !important;
 
   &.ng-enter {
@@ -19,16 +19,5 @@
         }
       }
     }
-  }
-
-  #checkExercise {
-    margin-top: 20px;
-    background-color: #42505D;
-    color: white;
-  }
-
-  #nextExercise,
-  #moreExercises {
-    background-color: #8BBDB2;
   }
 }

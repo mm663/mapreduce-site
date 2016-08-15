@@ -56,6 +56,11 @@
         .mapReduceSection .animationContainer .jsavcontainer .jsavcanvas div.jsavautoresize.jsavcenter.jsavarray {
           height: 70px !important;
           overflow: auto; }
+        .mapReduceSection .animationContainer .jsavcontainer .jsavcanvas ol.jsavautoresize.jsavcenter.jsavarray.jsavhorizontalarray {
+          height: 70px !important;
+          max-width: 100%;
+          overflow-x: visible;
+          overflow-y: auto; }
         .mapReduceSection .animationContainer .jsavcontainer .jsavcanvas .jsavlabel {
           font-size: 1.1em; }
         .mapReduceSection .animationContainer .jsavcontainer .jsavcanvas .jsavnode.jsavindex {
@@ -73,9 +78,6 @@
           .mapReduceSection .animationContainer .jsavcontainer .jsavcanvas .jsav-pair .jsav-pair-values {
             background-color: cornflowerblue;
             border-left: 2px solid white; }
-          .mapReduceSection .animationContainer .jsavcontainer .jsavcanvas .jsav-pair .jsav-pair-key:hover,
-          .mapReduceSection .animationContainer .jsavcontainer .jsavcanvas .jsav-pair .jsav-pair-values:hover {
-            background-color: rgba(255, 255, 255, 0.7); }
         .mapReduceSection .animationContainer .jsavcontainer .jsavcanvas .jsavcodeline,
         .mapReduceSection .animationContainer .jsavcontainer .jsavcanvas .jsavpreviousline {
           background-color: gray; }

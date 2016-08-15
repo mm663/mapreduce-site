@@ -62,6 +62,16 @@
   .jsavmodelanswer .jsavcanvas div.jsavautoresize.jsavcenter .idContainer:hover {
     background-color: #649bb0; }
 
+.exercise md-radio-group {
+  outline: none; }
+  .exercise md-radio-group span {
+    display: block; }
+  .exercise md-radio-group md-radio-button {
+    display: inline; }
+    .exercise md-radio-group md-radio-button:first-of-type {
+      margin-right: 20px; }
+    .exercise md-radio-group md-radio-button .md-off {
+      border-color: #575758 !important; }
 .exercise #mapReduceExercise {
   padding-bottom: 30px; }
 .exercise .jsavcontainer {
@@ -76,24 +86,49 @@
     color: white !important; }
   .exercise .jsavcontainer .jsavline {
     height: auto; }
-  .exercise .jsavcontainer .jsavexercisecontrols input[name="reset"] {
-    margin-left: 25px;
-    border-top-left-radius: 7px;
-    border-bottom-left-radius: 7px; }
-  .exercise .jsavcontainer .jsavexercisecontrols input[name="answer"] {
-    border-top-right-radius: 7px;
-    border-bottom-right-radius: 7px; }
-  .exercise .jsavcontainer .jsavexercisecontrols input[name="undo"],
-  .exercise .jsavcontainer .jsavexercisecontrols input[type="button"]:last-of-type {
-    display: none; }
+  .exercise .jsavcontainer .jsavexercisecontrols {
+    color: black; }
+    .exercise .jsavcontainer .jsavexercisecontrols input[name="reset"] {
+      margin-left: 25px;
+      border-top-left-radius: 7px;
+      border-bottom-left-radius: 7px; }
+    .exercise .jsavcontainer .jsavexercisecontrols input[name="answer"] {
+      border-top-right-radius: 7px;
+      border-bottom-right-radius: 7px; }
+    .exercise .jsavcontainer .jsavexercisecontrols input[name="undo"],
+    .exercise .jsavcontainer .jsavexercisecontrols input[type="button"]:last-of-type {
+      display: none; }
   .exercise .jsavcontainer .jsavcanvas div.jsavautoresize.jsavcenter .correct {
     background-color: #32CD32; }
   .exercise .jsavcontainer .jsavcanvas div.jsavautoresize.jsavcenter .incorrect {
     background-color: #CD0000; }
+  .exercise .jsavcontainer input[disabled] {
+    opacity: 0.5; }
 .exercise a.jsavsettings {
   margin: 0 auto; }
+.exercise .jsavvalue {
+  padding: 5px; }
+.exercise #checkExercise {
+  margin-top: 20px;
+  background-color: #42505D;
+  color: white; }
+.exercise #nextExercise,
+.exercise #previousExercise,
+.exercise #finishExercise,
+.exercise #moreExercises {
+  margin-top: 20px;
+  background-color: #8BBDB2; }
+.exercise .result {
+  color: #f0ad4e;
+  font-weight: bold; }
 
 .exerciseDialog {
   color: black; }
+
+#moreExercises {
+  display: inline-flex; }
+
+p.md-title {
+  color: white; }
 
 /*# sourceMappingURL=Exercises.css.map */

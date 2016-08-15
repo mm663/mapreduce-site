@@ -168,11 +168,9 @@ var WordCountExercise = {
             var pair6 = Utils.JSAV.createKeyValuePair(modeljsav, 'hi, world', '1, 1');
             var pair7 = Utils.JSAV.createKeyValuePair(modeljsav, 'hi', '1');
 
-            modeljsav.displayInit();
-
             pair1.highlight();
             modeljsav.umsg("Step 1: Highlight pair('world', 1)");
-            modeljsav.step();
+            modeljsav.displayInit();
 
             pair2.highlight();
             modeljsav.umsg("Step 2: Highlight pair('hello', 1, 1)");
@@ -268,14 +266,14 @@ var WordCountExercise = {
             var pair1 = Utils.JSAV.createKeyValuePair(modeljsav, 'hello', '-');
             var pair2 = Utils.JSAV.createKeyValuePair(modeljsav, 'world', '-');
 
-            Utils.Exercise.changeField(pair1.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '3');
-            modeljsav.umsg('Step 1: Change values of first pair to 3.');
+            Utils.Exercise.changeField(pair1.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1, 2');
+            modeljsav.umsg("Step 1: Change values of first pair to '1, 2'.");
             modeljsav.step();
             answerPairs.push(pair1);
             modeljsav.displayInit();
 
-            Utils.Exercise.changeField(pair2.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '2');
-            modeljsav.umsg('Step 2: Change values of second pair to 2.');
+            Utils.Exercise.changeField(pair2.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1');
+            modeljsav.umsg('Step 2: Change values of second pair to 1.');
             modeljsav.step();
             answerPairs.push(pair2);
 

@@ -34,12 +34,10 @@ var WordCount = {
 
         //Map
         WordCount.map(mapperInput);
-        var sasInput = mapJSAVPairs;
 
         //Combine
         if(animationService.isUsingCombiners()) {
             WordCount.combine(mapJSAVPairs);
-            sasInput = combinerJSAVPairs;
         }
 
         //Partition
@@ -49,10 +47,8 @@ var WordCount = {
             WordCount.partition(mapJSAVPairs, mapperInput.length, Number(reducerCount));
         }
 
-        sasInput = partitionJSAVPairs;
-
         //Shuffle and Sort
-        WordCount.shuffleAndSort(sasInput);
+        WordCount.shuffleAndSort(partitionJSAVPairs);
 
         //Reduce
         WordCount.reduce(sasJSAVPairs, Number(reducerCount));

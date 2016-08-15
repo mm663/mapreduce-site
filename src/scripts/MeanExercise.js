@@ -87,7 +87,7 @@ var MeanExercise = {
             modeljsav.umsg("Step 2: Highlight pair('hello', 1, 1)");
             modeljsav.step();
 
-            pair4.highlight();
+            pair6.highlight();
             modeljsav.umsg("Step 3: Highlight pair('hi', 1)");
             modeljsav.step();
 
@@ -167,13 +167,13 @@ var MeanExercise = {
             var pair1 = Utils.JSAV.createKeyValuePair(modeljsav, 'hello', '-');
             var pair2 = Utils.JSAV.createKeyValuePair(modeljsav, 'world', '-');
 
-            Utils.Exercise.changeField(pair1.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '(5, 2)');
+            Utils.Exercise.changeField(pair1.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', 'pair(5, 2)');
             modeljsav.umsg('Step 1: Change value of first pair to (5, 2)');
             modeljsav.step();
             answerPairs.push(pair1);
             modeljsav.displayInit();
 
-            Utils.Exercise.changeField(pair2.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '(2, 1)');
+            Utils.Exercise.changeField(pair2.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', 'pair(2, 1)');
             modeljsav.umsg('Step 2: Change value of second pair to (2, 1)');
             modeljsav.step();
             answerPairs.push(pair2);
@@ -343,11 +343,11 @@ var MeanExercise = {
 
             modeljsav.displayInit();
 
-            pair1.highlight();
+            pair2.highlight();
             modeljsav.umsg("Step 1: Highlight pair('world', '3/3 => 1.00')");
             modeljsav.step();
 
-            pair2.highlight();
+            pair3.highlight();
             modeljsav.umsg("Step 2: Highlight pair('hello', '6/3 => 2.00')");
             modeljsav.step();
 

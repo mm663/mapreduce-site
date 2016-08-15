@@ -30,12 +30,10 @@ var Mean = {
 
         //Map
         Mean.map(mapperInput, Number(mapperCount));
-        var sasInput = mapJSAVPairs;
 
         //Combine
         if(animationService.isUsingCombiners()) {
             Mean.combine(mapJSAVPairs);
-            sasInput = combinerJSAVPairs;
         }
 
         //Partition
@@ -45,10 +43,8 @@ var Mean = {
             Mean.partition(mapJSAVPairs, Number(mapperCount), Number(reducerCount));
         }
 
-        sasInput = partitionJSAVPairs;
-
         //Shuffle and Sort
-        Mean.shuffleAndSort(sasInput);
+        Mean.shuffleAndSort(partitionJSAVPairs);
 
         //Reduce
         Mean.reduce(sasJSAVPairs, Number(reducerCount));
@@ -378,7 +374,7 @@ var Mean = {
 
             //Step 1
             av.label("Reducer receives its assigned data and divides the sums by the counts of each pair," +
-                "to obtain a mean for that particular key.");
+                " to obtain a mean for that particular key.");
             av.step();
 
             for(j = 0; j < pairCount; j++) {

@@ -84,4 +84,21 @@ describe('MeanController', function() {
             expect(scope.inputList.length).toBe(0);
         });
     });
+
+    describe('if addSampleData() is called', function() {
+        beforeEach(function() {
+            var element = document.createElement('test');
+            element.id = 'meanInputList';
+
+            spyOn(document, 'getElementById').and.returnValue(element);
+
+            scope.addToList();
+            scope.removeSelectedElements();
+        });
+
+        it('should add the sample data to the inputList', function() {
+            scope.addSampleData();
+            expect(scope.inputList).not.toBe(null);
+        });
+    });
 });

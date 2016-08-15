@@ -33,12 +33,10 @@ var RelativeFrequencies = {
 
         //Map
         RelativeFrequencies.map(mapperInput);
-        var sasInput = mapJSAVPairs;
 
         //Combine
         if(animationService.isUsingCombiners()) {
             RelativeFrequencies.combine(mapJSAVPairs);
-            sasInput = combinerJSAVPairs;
         }
 
         //Partition
@@ -48,10 +46,8 @@ var RelativeFrequencies = {
             RelativeFrequencies.partition(mapJSAVPairs, mapperInput.length, Number(reducerCount));
         }
 
-        sasInput = partitionJSAVPairs;
-
         //Shuffle and Sort
-        RelativeFrequencies.shuffleAndSort(sasInput);
+        RelativeFrequencies.shuffleAndSort(partitionJSAVPairs);
 
         //Reduce
         RelativeFrequencies.reduce(sasJSAVPairs, Number(reducerCount));
@@ -418,7 +414,7 @@ var RelativeFrequencies = {
                 "for all count c in counts [c1, c2, ...]",
                 " sum = sum + c",
                 "RF = sum / marginal",
-                "Emit(term t, sum or RF)"
+                "Emit(term t, RF)"
             ]);
 
             //Step 1

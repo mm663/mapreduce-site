@@ -25,25 +25,35 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-        './bower_components/angular/angular.js',
-        './bower_components/angular-mocks/angular-mocks.js',
-        './bower_components/angular-route/angular-route.min.js',
-        './bower_components/angular-animate/angular-animate.min.js',
-        './bower_components/angular-material/angular-material.min.js',
-        './bower_components/angular-aria/angular-aria.min.js',
+        './node_modules/angular/angular.js',
+        './node_modules/angular-mocks/angular-mocks.js',
+        './node_modules/angular-route/angular-route.min.js',
+        './node_modules/angular-animate/angular-animate.min.js',
+        './node_modules/angular-material/angular-material.min.js',
+        './node_modules/angular-aria/angular-aria.min.js',
+
         './src/scripts/services/AnimationService.js',
+
         './src/scripts/controllers/AboutController.js',
         './src/scripts/controllers/AnimationController.js',
+        './src/scripts/controllers/ExercisesController.js',
         './src/scripts/controllers/HomeController.js',
         './src/scripts/controllers/MapReduceController.js',
+        './src/scripts/controllers/MapReduceExerciseController.js',
         './src/scripts/controllers/MeanController.js',
+        './src/scripts/controllers/MeanExerciseController.js',
         './src/scripts/controllers/MenuController.js',
         './src/scripts/controllers/RelativeFrequenciesController.js',
+        './src/scripts/controllers/RelativeFrequenciesExerciseController.js',
         './src/scripts/controllers/WordCountController.js',
+        './src/scripts/controllers/WordCountExerciseController.js',
+
         './src/scripts/directives/AnimationControlsDirective.js',
         './src/scripts/directives/MapReduceDirective.js',
         './src/scripts/directives/MeanLabelDirective.js',
         './src/scripts/directives/MenuDirective.js',
+        './src/scripts/directives/MapReduceExerciseDirective.js',
+
         './src/scripts/**/*.js',
         './tests/**/*.spec.js',
 
@@ -62,6 +72,7 @@ module.exports = function(config) {
     preprocessors: {
         './src/templates/AnimationControls.html': ['ng-html2js'],
         './src/templates/MapReduce.html': ['ng-html2js'],
+        './src/templates/MapReduceExercise.html': ['ng-html2js'],
         './src/templates/Menu.html': ['ng-html2js'],
         './src/scripts/controllers/*.js': ['coverage'],
         './src/scripts/directives/*.js': ['coverage'],

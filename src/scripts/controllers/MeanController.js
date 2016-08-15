@@ -42,4 +42,39 @@ var meanController = function($scope, $compile, animationService) {
             $(selectedElems[i]).remove();
         }
     };
+
+    $scope.addSampleData = function() {
+        const sampleData = [
+            {
+                key: "hello",
+                int: "1"
+            },
+            {
+                key: "world",
+                int: "2"
+            },
+            {
+                key: "how",
+                int: "1"
+            },
+            {
+                key: "are",
+                int: "3"
+            },
+            {
+                key: "you",
+                int: "5"
+            }
+        ];
+
+        var well = document.getElementById('meanInputList');
+        for(var i = 0; i < sampleData.length; i++) {
+            $scope.inputList.push({key: sampleData[i].key, values: sampleData[i].int});
+
+            var meanLabel = document.createElement('mean-label');
+            meanLabel.setAttribute("key", sampleData[i].key);
+            meanLabel.setAttribute("integer", sampleData[i].int);
+            $compile(well.appendChild(meanLabel))($scope);
+        }
+    };
 };

@@ -18,6 +18,9 @@ nav {
 .page.ng-enter {
   z-index: 8888; }
 
+input {
+  color: black; }
+
 .page-home .btn,
 .page-exercises .btn {
   display: inline-block;

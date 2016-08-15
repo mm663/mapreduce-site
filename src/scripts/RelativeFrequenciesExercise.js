@@ -277,9 +277,9 @@ var RelativeFrequenciesExercise = {
             pair7.addIDContainer("Sort", '-');
 
             //Getting ID Elements
-            var pair5SortID = $(pair1.element[0].getElementsByClassName('idContainer')[0]);
-            var pair6SortID = $(pair2.element[0].getElementsByClassName('idContainer')[0]);
-            var pair7SortID = $(pair3.element[0].getElementsByClassName('idContainer')[0]);
+            var pair5SortID = $(pair5.element[0].getElementsByClassName('idContainer')[0]);
+            var pair6SortID = $(pair6.element[0].getElementsByClassName('idContainer')[0]);
+            var pair7SortID = $(pair7.element[0].getElementsByClassName('idContainer')[0]);
 
             //Assigning click handlers
             pair5SortID.click({type: 'id'}, Utils.Exercise.pairClickHandler);
@@ -310,20 +310,20 @@ var RelativeFrequenciesExercise = {
             pair3.addIDContainer("Sort", '-');
 
             Utils.Exercise.changeField(pair1.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1');
-            Utils.Exercise.changeField(pair1.element[0].getElementsByClassName('SortID')[0], 'ID', '2');
+            Utils.Exercise.changeField(pair1.element[0].getElementsByClassName('SortId')[0], 'ID', '2');
             modeljsav.umsg('Step 1: Change values of first pair to 3.');
             modeljsav.step();
             answerPairs.push(pair1);
             modeljsav.displayInit();
 
-            Utils.Exercise.changeField(pair2.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '2');
-            Utils.Exercise.changeField(pair2.element[0].getElementsByClassName('SortID')[0], 'ID', '1');
-            modeljsav.umsg('Step 2: Change values of second pair to 2.');
+            Utils.Exercise.changeField(pair2.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '2, 3');
+            Utils.Exercise.changeField(pair2.element[0].getElementsByClassName('SortId')[0], 'ID', '1');
+            modeljsav.umsg('Step 2: Change values of second pair to 2, 3.');
             modeljsav.step();
             answerPairs.push(pair2);
 
-            Utils.Exercise.changeField(pair3.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '1');
-            Utils.Exercise.changeField(pair3.element[0].getElementsByClassName('SortID')[0], 'ID', '3');
+            Utils.Exercise.changeField(pair3.element[0].getElementsByClassName('jsav-pair-values')[0], 'pair', '2');
+            Utils.Exercise.changeField(pair3.element[0].getElementsByClassName('SortId')[0], 'ID', '3');
             modeljsav.umsg('Step 3: Change values of second pair to 2.');
             modeljsav.step();
             answerPairs.push(pair3);
@@ -366,7 +366,7 @@ var RelativeFrequenciesExercise = {
                 }
             }
 
-            av.umsg('The 2 pairs below are the input received by the Reducer. <br>' +
+            av.umsg('The 4 pairs below are the input received by the Reducer. <br>' +
                 'Choose the correct, final outputs. <br><br>' +
                 'Inputs:');
 
@@ -423,8 +423,8 @@ var RelativeFrequenciesExercise = {
             modeljsav.umsg("Step 1: Highlight pair '(are, *), Marginal: 4'");
             modeljsav.step();
 
-            pair2.highlight();
-            modeljsav.umsg("Step 2: Highlight pair '(are, world), 1/4 => 0.25'");
+            pair3.highlight();
+            modeljsav.umsg("Step 2: Highlight pair '(are, world), 2/4 => 0.50'");
             modeljsav.step();
 
             pair4.highlight();
